@@ -49,6 +49,8 @@
 
 - `True`  `False`
 - 0, 0.0, (), [], {}, ' ', None: `False`로 변환
+  - 빈문자열이 아니면 `True`
+
 
 #### 수치형(Numeric)
 
@@ -218,6 +220,9 @@ print("""문자열 안에 '작은 따옴표'나
   - value: 숫자, 리스트 등 모든 값이 들어갈 수 있음 
 - key를 통해 value에 접근
   - key는 고유하며 중복이 불가한 반면 value는 중복 가능하기 때문
+  - dict['key']
+  - dict.get('key')
+    - 존재하지 않는 key값을 가져오려고 할 경우 dict['key']는 key Error가 발생하지만 dict.get('key')는 None을 반환
 
 ##### 자료형 변환
 

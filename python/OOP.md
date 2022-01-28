@@ -149,7 +149,117 @@ a == b, a is b # True True
 
 
 
+### 인스턴스 
+
+#### 인스턴스 변수
+
+- 인스턴스가 가지고 있는 변수
+  - 하나하나의 인스턴스의 종속적인 변수, 즉 인스턴스마다 독립적으로 기능
+
+- 인스턴스가 생성된 이후 `instance.name`과 같은 형태로 접근 및 할당
+  - . 연산자 활용
 
 
+#### 인스턴스 메소드
 
+- 인스턴스 변수를 사용하거나 인스턴스 변수에 값을 설정하는 메소드
+- 호출시 첫번째 인자로 인스턴스 자기자신(self)이 전달됨
+  - 인스턴스 변수를 조작하기 위함
+
+
+```python
+class MyClass:
+    def instance_method(self, arg1, ...):
+```
+
+#### self
+
+- 인스턴스 자기자신
+- 호출시 첫 번째 인자로 인스턴스 자신이 전달되게 설계
+  - self라는 이름으로 첫번째 인자를 정의
+    - 파이썬의 암묵적 규칙
+- 각각의 인스턴스를 조작하기 위해 파이썬이 자동으로 인스턴스 그 자체를 첫번째 인자로 넘겨주는 것
+  - 이를 넘겨주지 않으면 인스턴스를 조작할 수 없음
+
+- self를 쓰지 않으면 오류
+
+``` python
+# 클래스 정의 (Person)
+class Person:
+    # 인스턴스 메서드
+    #def test():
+    #   return 'test'
+    def test(self):
+        return self
+    
+# 인스턴스 생성 (p1)
+p1 = Person()
+
+# p1.test()
+# TypeError: test() takes 0 positional arguments but 1 was given
+
+# <__main__.Person object at ~~
+# Python 내부적으로 Person.test(p1)
+s = p1.test()
+print(s, p1) # 같은 결과
+
+```
+
+#### 생성자 메소드
+
+- `__init__` 
+
+  - 인스턴스 객체가 생성될 때 계속해서 자동으로 호출되는 메소드
+
+  - 인스턴스 변수들의 초기값 설정
+
+  - self가 들어감
+
+
+```python
+class Person:
+    
+    def __init__(self, name, age):
+        # 인스턴스 변수를 정의하기 위해 사용
+        self.name = name
+        self.age = age
+        
+#p1 = Person()
+#TypeError : __init__()missing 2 required positional arguments
+#Person()인스턴스를 만들면 __init__메서드가 호출되는 구나
+p1 = Person('길동', 100)
+print(p1.name, p1.age) # 길동 100
+```
+
+```python
+class Person:
+    
+    def __init__(self, name, age=1):
+        # 인스턴스 변수를 정의하기 위해 사용
+        self.name = name
+        self.age = age
+p2 = Person('길동')
+print(p2.name, p2.age) # 길동 1
+p3 = Person('민지', 999)
+print(p3.name, p3.name) # 민지 999
+```
+
+#### 소멸자 메소드
+
+- `__del__`
+  - 인스턴스 객체가 소멸되기 직전에 호출되는 메소드
+
+
+```python
+class Person:
+    
+    def __init__(self):
+        print('응애')
+        
+   	def __del__(self):
+        print('으억...')
+        
+p1 = Person() # 응애
+del p1 # 으억...
+```
 

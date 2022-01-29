@@ -263,3 +263,233 @@ p1 = Person() # 응애
 del p1 # 으억...
 ```
 
+#### 매직 메소드
+
+- Double underscore(__)가 있는 메소드는 특수한 동작을 위해 만들어진 특별한 기능을 하는 메소드
+- 특정한 함수를 호출할 때 매직메소드를 쓰도록 되어있음
+  - 특정 상황에서 자동으로 불리는 메소드
+    - 내부적인 구현을 공통적으로 가져가기 위함 
+
+- 스페셜 메소드 혹은 매직 메소드라고 불림
+
+```python
+class Person:
+    
+    def __init__(self, name, age, height):
+        self.name = name
+        self.age = age
+        self.height = height
+        
+    def __str__(self):
+        return f'<{self.name}> : {self.age}살'
+        
+    def __gt__(self, other):
+        print(f'{self.name}: {self.age}살 / {other.name}: {other.age}살')
+        return self.age > other.age
+   
+	def __len__(self):
+        return self.height
+    
+p1 = Person('tom', 100, 190)
+p2 = Person('john', 10, 185)
+p1 > p2 
+# tom: 100살 / john: 10살
+# True
+len(p1) # 190
+len(p2) # 185
+
+print(p1) # <tom>: 100살
+```
+
+- `__str__`
+  - 해당 객체의 출력 형태를 지정
+  - 객체 자체를 문자열로 바꿨을 때 어떻게 보였으면 좋겠는지에 방점을 찍고 구현
+  - 프린트 함수를 호출할 때 자동으로 호출
+    - 어떤 인스턴스를 출력하면 `__str__`의 return 값 출력
+- `__repr__`
+  - 해당 객체의 출력 형태를 지정
+  - `__repr__`로 처리된 값을 보고 해당 객체를 구현할 수 있게 객체에 대한 정보를 담음
+- `dir()`을 통해 매직 메소드 확인 가능
+  - `__str__(self)`, `__len(self)__`, `__repr__(self)`
+  - class간 비교를 구현해주기 위한 매직 메소드
+    - `__lt__(self, other)`, `__le__(self, other)`, `__eq__(self, other)`, `__gt__(self, other)`, `__ge__(self, other)`, `__ne__(self, other)`  
+
+
+
+### 클래스
+
+#### 클래스 변수
+
+- 한 클래스의 어떤 인스턴스라도 똑같은 값을 가지고 있는 속성 
+  - 클래스로 만들어진 모든 인스턴스가 공유
+- 클래스 영역 내부에서 정의
+  - 설계를 할 때 클래스 변수가 있는 형태로 설계해야
+
+- `<classname>.<name>`으로 접근 할당
+
+```python
+class Circle:
+    pi = 3.14
+    
+    def __init__(self, r):
+        self.r = r
+    
+    def area(self):
+        return Circle.pi * self.r * self.r
+    
+Circle.pi # 3.14
+
+c1 = Circle(2)
+c1.area() # 12.56
+
+c1.pi # 3.14
+
+c2 = Circle(3)
+c2.area() # 28.599
+
+c2.pi # 3.14
+```
+
+#### 클래스 메소드
+
+- `@classmethod` 데코레이터를 사용하여 정의
+  - 데코레이터: 함수를 어떤 함수로 꾸며서 새로운 기능을 부여
+- 클래스 자체에 정의되어있는 클래스 속성을 조작하고 싶을 때 사용
+- 호출시 첫번째 인자로 클래스(cls)가 전달
+  - 클래스를 조작할 아이니 내부적으로 호출되면서 클래스를 넘겨줌
+  - 인스턴스의 self와 같은 역할
+
+```python
+class MyClass:
+    var = 'Class 변수'
+    
+    @classmethod
+    def class_method(cls):
+        print(cls.var)
+        return cls
+    
+MyClass.class_method() 
+# Class 변수
+# __main__.MyClass
+MyClass #__main__.MyClass
+```
+
+#### 인스턴스와 클래스 간의 이름 공간(namespace)
+
+```python
+class Circle:
+    pi = 3.14
+    
+    def __init__(self, r):
+        self.r = r
+        
+c1 = Circle(2)
+print(c1, r)
+```
+
+- 클래스를 정의를 하는 순간 클래스 공간이 생기며 이 안에 클래스 변수가 들어가 있음
+- 인스턴스를 만드는 순간 (실제 init생성자가 호출되면서 생성될 때) 인스턴스 공간이 생성
+- 인스턴스에서 특정 속성에 접근하면 인스턴스-클래스 순으로 탐색
+  - 같은 이름이면 인스턴스의 namespace로만 접근할 수 있음
+  - 인스턴스에 이름이 없으면 오브젝트에서 찾고 이를 통해 클래스 변수에 접근
+
+
+#### 스태틱 메소드
+
+- `@staticmethod` 데코레이터를 사용해 정의
+- 인스턴스 변수나 클래스 변수를 가지고 어떠한 역할도 하지 않지만 클래스 안에 메소드를 정의하고 싶을 때 사용
+- 호출 시 어떠한 인자도 전달되지 않음
+- 클래스와도 인스턴스와도 관계없음을 보여줌
+
+```python
+class MyClass:
+    
+    @staticmethod
+    def static_method(static):
+        return static
+    
+MyClass.static_method()
+# static_method() missing 1 required positional argument
+# 1개 값을 왜 안 넘겨줘? 어떠한 인자도 자동으로 넘어가는 게 없음
+
+class MyClass:
+    
+    @staticmethod
+    def static_method(static):
+        return 'static'
+MyClass.static_method() # 'static'
+```
+
+```python
+class MyClass:
+    
+    # 함수는 기본적으로 로컬 스코프
+    # 내부에서 활용하고 싶으면 파라미터로 받도록 정의
+    
+    # 인스턴스 메서드: 인스턴스를 조작하고 싶어
+    # 함수 내부에 인스턴스를 던져주도록 설계
+    # 메서드를 정의할 때 self로 받도록 
+    def instance_method(self):
+        return self
+    
+    @staticmethod
+    def static_method(static):
+        return static
+    
+    # 클래스 메서드: 클래스를 조작하고 싶어
+    # 함수 내부에 클래스를 던져주도록 설계
+    # 메서드를 정의할 때 cls로 받로록
+    @classmethod
+    def class_method(cls):
+        return cls
+    
+    # 스태틱 메서드: 클래스나 인스턴스를 조작할 생각은 없는데 함수를 쓸거야
+    # 아무 것도 넘겨주지 않도록 설계
+    @staticmethod
+    def static_method():
+        return ''
+```
+
+### 메소드 정리
+
+#### 인스턴스 메소드
+
+- 각각의 만들어진 인스턴스를 조작할 때 사용
+- 호출한 인스턴스를 의미하는 self 매개 변수를 통해 인스턴스 조작
+
+#### 클래스 메소드
+
+- 클래스를 의미하는 cls 매개 변수를 통해 클래스 조작
+- 클래스 종속적
+
+#### 스태틱 메소드
+
+- 인스턴스나 클래스를 의미하는 매개변수는 사용하지 않음 
+  - 객체 상태나 클래스 상태를 수정할 수 없음
+- 일반 함수처럼 동작하지만 클래스의 이름공간에 귀속
+- 해당 클래스로 한정하는 용도로 사용
+
+```python
+class MathUtility:
+    
+    @staticmethod:
+    def get_pi():
+        return 3.141592
+    
+    @staticmethod
+    def get_e():
+        return 2
+```
+
+```python
+class PersonUtility:
+    
+    @staticmethod
+    def get_phone_number(phone_number):
+        return phone_number[:2] + ')' + phone_number[2:]
+    
+PersonUtility.get_phone_number('0215775588')#02)15775588
+```
+
+
+

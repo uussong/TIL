@@ -493,3 +493,268 @@ PersonUtility.get_phone_number('0215775588')#02)15775588
 
 
 
+### 객체 지향의 핵심개념
+
+#### 추상화
+
+- 어떠한 것을 만들고 싶을 때 이를 만들어놓고 사람들이 쓸 수 있도록 내 프로그램에서 정의가 되어있는 클래스를 만들고 그 행동들을 정의
+- 내부로직을 모르더라도 사용자들은 추상화된 class를 쓸 뿐
+
+#### 상속
+
+- 클래스는 상속이 가능
+- 두 클래스 사이의 부모-자식 관계를 정립
+
+```python
+class ChildClass(ParentClass):
+    pass
+```
+
+- 하위클래스(자식클래스)는 상위클래스(부모클래스)에 정의된 속성을 모두 상속 받음
+- 상속을 통해 메소드 재사용 가능, 코드의 재사용도 높아짐 
+  - DRY원칙 (Don't Repeat Yourself)
+  - 특성을 그대로 가져오고 커스터마이징 하고 싶은 건 커스터 마이징 함
+
+- 계층구조를 계속 만들어 나갈 수 있음
+- 실제 개발에선 클래스의 계층구조를 최대한 다양하게 나누는 경우가 많음
+
+##### 상속 관련 함수와 메소드
+
+```python
+class Person:
+    
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+        
+    def talk(self):
+        print(f'반갑습니다. {self.naame}입니다.')
+        
+p1 = Person('김', 30)
+p1.talk() #반갑습니다. 김입니다.
+```
+
+```python
+class Professor:
+    
+    def __init__(self, name, age, department):
+        self.name = name
+        self.age = age
+        self.department = department
+        
+prof1.Professor('김교수', 50, '컴공')
+prof1.talk() # AttributeError: 'Professor' object has no attribute 'talk' 
+```
+
+```python
+class Professor(Person):
+    
+    def __init__(self, name, age, department):
+        self.name = name
+        self.age = age
+        self.department = department
+        
+prof1.Professor('김교수', 50, '컴공')
+prof1.talk() # 반갑습니다. 김교수입니다.
+```
+
+```python
+class Student(Person):
+    
+    def __init__(self, name, age, gpa):
+        self.name = name
+        self.age = age
+        self.gpa = gpa
+        
+    def talk(self):
+        print(f'{self.name}입니다. 교수님. ^^7')
+s1 = Student('김', 20, 4.5)
+s1.talk() # 김입니다. 교수님. ^^7
+```
+
+- `isinstance(object, classinfo)`
+  - classinfo의 instance거나 subclass인 경우 True
+- `issubclass(class, classinfo)`
+  - class가 오른쪽의 클래스(classinfo)의 subclass인가를 확인
+
+```python
+class Person:
+    pass
+
+class Student(Person):
+    pass
+
+class Professor(Person):
+    pass
+
+p1 = Person()
+s1 = Studnet()
+prof1 = Professor()
+
+isinstance(p1, Person) # True
+isinstance(s1, Person) # True
+isinstance(p1, Student) # False
+issubclass(Student, Person) # True
+issubclass(bool, int) # True 
+					  # bool 0, 1 int 1, 2, 3, 4, 5, ...
+issubclass(float, int) # Flase
+					   # float 실수.. 정수 + 소수..
+```
+
+- super()
+  - 자식클래스에서 부모클래스를 사용하고 싶은 경우 상위클래스에 직접 접근하고 싶을 때 사용
+    - super()를 통해 실제 부모 클래스를 받아 내부적으로 쓸 수 있음
+    - 메소드 오버라이딩을 통해 재정의 가능
+
+```python
+class Person:
+    
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+        
+    def talk(self):
+        print(f'반갑습니다. {self.naame}입니다.')
+        
+class Student(Person):
+    
+    def __init__(self, name, age, studnet_id):
+        super().__init__(name, age)
+        self.student_id = student_id
+
+s1 = Student('이', 26, '20220101')
+s1.name #이
+s1.age #26
+```
+
+##### 다중 상속
+
+- 클래스를 두 개 이상 받는 것
+  - 상속 받은 모든 클래스 요소 활용 가능
+
+- 중복된 속성이나 메서드의 경우 상속 순서에 의해 결정
+  - 먼저 상속한 것의 영향받음
+
+- mro 메소드 (Method Resolution Order) 
+  - 메소드를 뭐를 먼저 할 것인지 해결해나가는 순서가 있음
+  - 먼저 상속받은 것이 앞 순서
+  - 모든 것의 끝에는 object
+
+```python
+class A:
+    name = 'A'
+    
+class B(A):
+    name = 'B'
+   
+class C(A):
+    name = 'C'
+    
+class D(B, C):
+   pass
+
+d = D()
+print(d.name) #B 먼저 선언된 것 따름
+```
+
+#### 다형성
+
+- 동일한 메소드가 클래스에 따라 다르게 행동할 수 있음
+  - 서로 다른 클래스에 속해있는 객체들이 동일한 메시지에 대해 다른 방식으로 응답될 수 있음
+
+- 상속 받은 메소드를 재정의 (메소드 override)
+  - 클래스 상속시 부모클래스에서 정의한 메소드를 자식 클래스에서 변경할 수 있음
+  - 특정 기능을 바꾸고 싶을 때 사용
+  - 부모 클래스 메소드를 실행시키고 싶은 경우 `super()` 활용
+
+#### 캡슐화
+
+- 은닉성, 접근에 대한 권한
+- 암묵적으로 존재하지만 언어적으로 존재하지 않음
+
+##### 접근제어자
+
+- Public Access Modifier 
+  - 어디서나 접근 가능
+    - 일반적인 형태
+
+- Protected Access Modifier 
+  - 상속관계에서만 접근 가능
+  - 언더바 1개로 시작
+  - 암묵적 규칙으로 내부에서만 호출 가능
+
+
+```python
+class Person:
+    
+    def __init__(self, name, age):
+        self.name = name
+        self._age = age
+       
+    def get_age(self):
+        return self._age
+    
+p1 = Person('김', 23)
+p1._age # '_' 암묵적으로 이렇게 직접적으로 접근하지 말자는 것
+```
+
+- Private Access Modifier 
+  - 내 클래스 안에서만 접근 가능
+  - 언더바 2개로 시작
+  - 해당 클래스 바깥에서 호출 불가능
+    - 직접 접근하지 않고 메서드를 통해 조작해야함
+
+- 파이썬에서 public과 protected는 언어 차원에서 접근을 막아주지 않아 어디서 접근하여도 에러가 없는 반면 private은 언어 차원에서 접근을 막아줌(name mangling을 통해 기능)
+- 코드의 은닉성을 띄게하고 싶을 땐 protected를 위주로 사용
+  - protected에 잘못 접근하여도 에러가 나지 않아 코드의 문제가 생기지 않음
+    - 그렇더라도 `_`를 통해 protected라 언급해줬다는 걸 기억해야함
+
+
+```python
+class Person:
+    
+    def __init__(self, name, age):
+        self.name = name
+        self.__age = age
+       
+    def get_age(self):
+        return self._age
+
+p1 = Person('김', 23)
+p1.__age #접근 불가능
+p1.get_age() #접근 가능
+```
+
+- getter 메소드
+  - 무언가를 주는 메서드
+    - 변수 값을 읽음
+  - `@property`
+- setter 메소드
+  - 새로 값을 받아 가지고 있는 속성에 할당하는 메서드
+    - 변수 값을 설정
+
+  - `@변수.setter`
+
+
+```python
+class Person:
+    
+    def __init__(self, age):
+        self._age = age
+   
+	@property
+    def age(self):
+        return self._age 
+    
+    @age.setter
+    def age(self, new_age):
+        self._age = new_age - 10
+   
+p1 = Person(10)
+#p1.age() TypeError
+p1.age # 메서드를 정의했는데 속성처럼 쓰도록 한다
+
+p2 = Person(40)
+p2.age # 30
+```
+

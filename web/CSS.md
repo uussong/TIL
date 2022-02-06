@@ -244,13 +244,12 @@ h1 {
 - display: inline
 
   - 줄 바꿈이 일어나지 않은 행의 일부 요소
-
-  -   inline의 기본 너비는 컨텐츠의 영역만큼 차지
+-   inline의 기본 너비는 컨텐츠의 영역만큼 차지
   - width, height (margin-top, margin-bottom) 지정할 수 없음
-
   - 일반적으로 text 생각하면 됨
-
-  - block 외 나머지 `<span>` `<a>` `<img>`등
+- block 외 나머지 `<span>` `<a>` `<img>`등
+    - `<img>`는 기본적으로 inline이나 widht, height를 지정할 수 있음
+    - `<img>`에 기본적으로 있는 사이 간격을 줄이기 위해 `display:block` 값을 줌
 - 속성에 따른 수평 정렬
   - width를 100px로 주고 확인할 수 있음
     - width를 안 줄 경우 화면너비 전체를 차지하기 때문
@@ -283,13 +282,17 @@ h1 {
 - relative: 상대 위치
   - Normal flow를 따랐을 때 자기 자신이 있어야 할 위치(static)를 기준으로 이동
     - Normal flow 유지
+    - 원래 위치에 있고 자리만 옮겨져 있는 것
   - 요소가 차지하는 공간은 static 때와 같음
 - absolute: 절대 위치
   - 절대 위치(특정 위치)에 갖다 붙임
     - 스크롤 해도 해당 위치에 고정
   - 가장 가까이의 부모, 조상 요소를 기준으로 이동
+  - static position을 지정하지 않은 상태에서 absolute는 static이 아닌 가까이 있는 부모요소를 기준으로 하기 때문에 기준으로 삼고 싶은 박스에 relative 값을 줘야함
   - Normal flow에서 제거되어 공중에 떠있는 상태가 됨
     - 일반적인 흐름에서 벗어나 다른 차원에서 움직임, 겹칠 수 있음
+    - 원래 위치에서 완전히 나가 그 공간을 밑에 있는 요소가 채움
+- relative와 absolute는 상황에 따라 혼용해 쓸 수 있으나 앞에서 어떤 속성을 주었냐에 따라 뒤의 결과는 달라짐
 - fixed: 고정 위치
   - viewport를 기준으로 해 항상 그 위치에 위치하게 하는 것
     - 스크롤 시에도 항상 같은 위치로 따라옴

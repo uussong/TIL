@@ -152,13 +152,11 @@ h1 {
   - 부모 요소(바로 위에 있는 상위요소) 크기에 대한 배수단위
   - 상대적인 크기를 지니는 단위
   - 1em = 100%, 1.5em = 150%
-  - 
-
 - **rem**
   - root + em
   - 최상위 요소(HTML)에 정의되어 있는 사이즈를 기준으로 배수단위를 가짐
+    - 기본적으로 root는 16px
   - 상대적인 크기를 지니는 단위
-
 - viewport
   - 유저가 실제로 보고 있는 화면(디바이스 화면), 유저에게 바로 보이게 되는 웹 컨텐츠 영역
     - mobile device로 보고 있다면 작아짐
@@ -226,6 +224,7 @@ h1 {
   - 기본적으로 우리가 주는 width는 컨텐츠 영역
 - border-box : border 기준
   - 우리 눈에 보이는 건 테두리에 맞게 설정하기 위해선 border-box로 설정
+  - content+padding+border 까지 모두 합쳐 width와 height 맞춰줌
 
 
 
@@ -237,25 +236,27 @@ h1 {
 - display: block
 
   - block의 기본 너비는 가질 수 있는 너비(화면 너비)의 100%
-  - 나머지 요소는 전부 margin으로 채움 
+  - 나머지 요소는 전부 오른쪽을 margin으로 채움 
     - 결국 화면 전체를 차지 다음 요소는 개행 즉 자동으로 줄바꿈이 일어남
   - 블록 레벨 요소 안에 인라인 레벨 요소가 들어갈 수 있음
   - `<div>` `<p>` `<form>` 등
 - display: inline
 
   - 줄 바꿈이 일어나지 않은 행의 일부 요소
--   inline의 기본 너비는 컨텐츠의 영역만큼 차지
+  - inline의 기본 너비는 컨텐츠의 영역만큼 차지
   - width, height (margin-top, margin-bottom) 지정할 수 없음
   - 일반적으로 text 생각하면 됨
-- block 외 나머지 `<span>` `<a>` `<img>`등
+  - block 외 나머지 `<span>` `<a>` `<input>` `<img>`등
     - `<img>`는 기본적으로 inline이나 widht, height를 지정할 수 있음
     - `<img>`에 기본적으로 있는 사이 간격을 줄이기 위해 `display:block` 값을 줌
 - 속성에 따른 수평 정렬
-  - width를 100px로 주고 확인할 수 있음
-    - width를 안 줄 경우 화면너비 전체를 차지하기 때문
-  - `margin-right: auto;` `text-align: left;` :왼쪽 정렬
-  - `margin-left: auto;` `text-align: right;` :오른쪽 정렬
-  - `margin-right: auto;` `margin-left: auto;` : 가운데 정렬
+  - block / inline 속성
+    - 왼쪽 정렬: `margin-right: auto;` / `text-align: left;`
+    - 오른쪽 정렬: `margin-left: auto;`  /`text-align: right;` 
+    - 가운데 정렬: `margin-right: auto;`  / `margin-left: auto;` 
+- 수직 정렬의 경우
+  - 기본으로 위로 붙는 형태다 보니 auto를 줘도 배분할 것이 없음
+  - `margin-top` 또는 `margin-bottom`이 `auto`면 실제로 갖는 값은 0 
 - display: inline-block
   - block과 inline 레벨 요소 특징 모두 가짐
   - block 요소를 자리 잡고 나머지를 inline요소들로 채울 때 사용
@@ -306,11 +307,18 @@ h1 {
   - display 따라 배치 달라짐
 - position으로 normal flow 안따르고 위치 기준을 바꿀 수 있음
   - relative 자리 차지함 원래 위치 기준으로 움직임
-  - fixed 자리 차지 않음 붕뜬다고 생각 특정 부모 위치 기준으로 움직임
-  - absolute 자리 차지 않음 붕뜬다고 생각 화면 위치 기준으로 움직임
+  - absolute 자리 차지 않음 붕뜬다고 생각 특정 부모(static이 아닌 부모) 위치 기준으로 움직임
+  - fixed 자리 차지 않음 붕뜬다고 생각 화면(브라우저(viewport)) 위치 기준으로 움직임
 
 
 
 ### Emmet
 
+- `>`  태그를 만들고 들여쓰기
+- `*n` 반복
+- `+` 줄바꿈 + 다음 태그 추가
+- `.` class 지정
+- `#` id 지정
+- `{content}` 내용 입력
 - https://docs.emmet.io/cheat-sheet/
+

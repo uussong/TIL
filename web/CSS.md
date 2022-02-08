@@ -72,7 +72,7 @@ h1 {
 - 인접 형제 결합자
   - `A + B`: A의 모든 형제 요소 중에서 바로 다음에 오는 B만 선택
 
-#### 의사 클래스(Pseudo Class)
+#### 의사 클래스(Pseudo Class) (가상 클래스)
 
 - 선택하고자하는 HTML요소의 특별한 상태를 찍고 싶은 것
 - `선택자:` 뒤에 의사 클래스가 옴 
@@ -98,7 +98,7 @@ h1 {
   - `:nth-of-type(n)`: 모든 자식 요소 중에서 n번째로 등장하는 특정 요소를 선택
   - `:last-of-type`: 모든 자식 요소 중에서 마지막으로 등장하는 특정 요소를 선택
 
-#### 의사 요소 
+#### 의사 요소 (가상 요소)
 
 - 딱 특정 부분만 선택할 때 사용
 - `::first-letter`: 요소의 텍스트에서 첫 번째 글자에 스타일을 적용
@@ -321,4 +321,197 @@ h1 {
 - `#` id 지정
 - `{content}` 내용 입력
 - https://docs.emmet.io/cheat-sheet/
+
+
+
+## CSS Layout
+
+### Float 
+
+- 박스를 왼쪽, 오른쪽으로 이동시켜 인라인요소들이 주변을 wrapping 하도록 함
+
+- 블럭 요소를 인라인 요소로 감고 싶을 때 사용
+
+  - 뉴스 레이아웃
+
+- Normal flow를 벗어나도록 함
+
+  - 둥둥 떠 있는 모습 옆으로 내용이 채워짐
+
+- 속성
+
+  - none: 기본값
+  - left: 요소를 왼쪽으로 띄움
+  - right: 요소를 오른쪽으로 띄움
+
+- Clearing float
+
+  - float값을 주었을 때 뒤의 요소가 따라오는 것을 방지
+    - float를 사용했을 때 다음 요소들의 정렬 요소를 지워주기 위함
+    - clear를 적용하는 요소부터 float로 인한 정렬 요소를 없앰
+
+  - float 요소의 부모로 div를 만들고 부모 요소에게 일반적인 이름으로 .clearfix 부여
+
+  ```css
+  .clearfix::after {
+      content: "";
+      display: block;
+      clear: both; 
+  }
+  ```
+
+  - clearing을 하는 이유
+    - float의 부모 요소는 높이가 0
+      - css의 높이는 자식의 높이만큼 가져가게 되어있음 자식이 float되어 normal flow에서 벗어났기 때문에 부모의 높이도 0이됨
+    - 뒤의 요소가 자연스럽게 공간을 채우게 되는데 이를 방지하기 위해서 부모가 자식의 높이를 가져가게 하기 위해 clearing 함
+      - 그 이후에 float의 영향이 가지 않도록 함
+  - inline에 float 적용하면 block으로 지정됨
+  - float가 텍스트가 인라인 요소 감싸는 형태다 보니 text는 밀리게 됨
+  - 개별적으로 `clear: left/right;` 등을 줄 수도 있음
+
+
+### Flexbox
+
+- 내부 영역 안에서의 배치 가능해짐 
+  - 수평구조 가능해짐
+- 축
+  - 메인 축 main axis
+  - 교차 축 cross axis
+- flexbox 구성 요소
+  - flex container
+    - 수평이 될 요소가 들어간 컨테이너에 `display: flex;` 값을 줌
+      - 개발자 도구에 flex 라 뜸
+    - `display: flex`:  컨테이너가 block 방식으로 쌓임
+    - `display: flex-inline`: 컨테이너가 inline 방식으로 쌓임
+  - flex item
+- 왜 flexbox를 사용해야 하나?
+  - 수직 정렬 수동값 부여 없이 가능
+  - 아이템 너비와 높이 혹은 간격을 동일하게 알아서 배치해줌
+
+#### container에 들어갈 수 있는 것
+
+- `display`: Flex Container를 정의
+
+  - flex, flex-inline: 컨테이너가 쌓이는 방식 block/inline
+
+- `flex-direction`: item들의 주 축(main-axis) 설정
+
+  - 아이템들이 어떻게 정렬을 할 건지, 하나의 컨테이너 박스에서 아이템들의 main축을 어떻게 잡을 건지 설정
+  - row, row-reverse, column, column-reverse
+
+- `flex-wrap`: item들의 줄 바꿈 설정
+
+  - 아이템들의 여러줄 묶음을 설정하는 속성
+  - 아이템들이 브라우저 창이 줄어들었을 때 줄 바꿈을 어떻게 만들어줄건지 설정
+  - nowrap: 아이템들을 묶지 않음 즉 한 줄로 모든 아이템을 표시하겠다 크기에 따라서 아이템 줄어들게 됨. default
+  - wrap: 아이템을 여러줄로 묶어서 표시. 브라우저 크기가 줄어들 때 여러줄이 됨 아이템을 여러줄로 표시하겠다. 브라우저 크기에 따라 줄 바꿈을 하겠다.
+  - wrap-reverse: 아래부터 쌓임 끝까지 펼치면 순서대로인데 아이템 내려가는 거가 앞에서부터 내려감
+
+- `flex-flow`: `flex-direction` 과 `flex-wrap` 을 줄여서 쓸 수 있음
+
+  - `flex-flow: flex-direction flex-wrap`
+
+- **`justify-content`**: 주 축(main-axis)의 정렬  방법 설정
+
+  - flexbox 주 축의 아이템들이 어떻게 정렬될 것인가
+  - flex-start, flex-end, center
+    - 정렬 기준(주축 방향)에 따라 container 왼쪽이 start 오른쪽이 end
+      - reverse되면 start, end도 바뀜
+    - 왼쪽 정렬, 오른쪽 정렬, 중앙 정렬
+  - space-between: 아이템들 중 가장 첫 번째를 둘 수 있는 가장 왼쪽에 두고 아이템 마지막을 둘 수 있는 가장 오른쪽에 둔 다음에 나머지 아이템들은 간격이 일정하게 둠
+    - 첫번째와 마지막 바깥은 간격 일정하지 않음
+  - space-around: 아이템들의 여백을 균등한 여백으로 만들어서 정렬하는 것
+  - space-evenly: 모든 여백을 균등한 여백으로 만들어서 정렬
+
+- `align-content`: 교차 축(cross-axis)의 정렬 방법 설정 (2줄 이상)
+
+  - 아이템 여러 줄일 때 사용
+  - flex-wrap: nowrap(default값)이면 align-content의미 없어짐
+  - 교차축을 기준으로 함
+
+  - stretch, flex-start, flex-end, center, space-between, space-around
+    - stretch: 교차 축을 꽉 채우기 위해 아이템을 늘림 default
+    - center: 컨테이너 높이의 가운데, 수직 정렬
+
+- `align-items`: 교차 축(cross-axis)의 정렬 방법 설정 (1줄) 
+  - 아이템 한 줄일 때 사용
+  - stretch, flex-start, flex-end, center, space-between, space-around, baseline
+    - **baseline**: 아이템들 안에 글자의 문자 기준선에 맞춰서 정렬 
+      - 문자의 크기가 다르면 박스의 크기도 달라짐 
+
+#### Flex Item을 위한 속성들
+
+- 각각의 아이템들에 주는 속성들
+
+- `order`: Item의 순서를 설정
+
+  - 개별 아이템의 우선순위를 정해주는 것 
+  - 기본값 0, 음수도 가능 
+    - 모든 요소 각각이 다 기본값이 0이기 때문에 하나의 요소에만 order:5를 줬다면 다섯번째 자리로 가는 것 아니라 맨 마지막으로 가게 됨
+  - 숫자 클수록 flex-end쪽에 가까워짐
+
+- `flex`:  `flex-grow` , `flex-shrink` , `flex-basis` 에 대한 단축 속성
+
+  - flex를 쓸거라면 flex-grow 필수(생략 불가) 뒤의 값은 default값이 들어가 생략 가능
+
+  - `flex-grow`: Item의 너비 증가(grow) 비율 설정
+
+    - 커질때 비율
+      - 늘릴 때 얼만큼 늘어나는 지
+    - 기본값 1
+    - 각각의 아이템이 너비 증가할 수 있는 상태여야 너비 옵션을 준 것이 의미가 있음
+      - flex-wrap: nowrap이 아니면 의미가 없음
+
+    ```html
+    <body>
+      <div class="container">
+        <div class="box" id="box1">1</div>
+        <div class="box" id="box2">2</div>
+        <div class="box" id="box3">3</div>
+      </div>
+    ```
+
+    ```css
+    .container{
+      display: flex
+    }
+    
+    #box1 {
+      flex-grow: 1;
+    }
+    
+    #box2 {
+      flex-grow: 2;
+    }
+    
+    #box3 {
+      flex-grow: 1;
+    }
+    ```
+
+    - grow값을 1, 2, 1 로 주면 1:2:1 즉 25% 50% 25% 로 늘어남
+
+      
+
+  - `flex-shrink`: Item의 너비 감소(shrink) 비율 설정
+
+    - 작아질때 비율 
+      - 줄일 때 얼마만큼 줄어들건가
+    - 기본값 1
+    - 아이템이 줄어들 수 없는 상태면 의미가 없다
+    - viewport가 줄어들다가 아이템의 너비의 영향을 미치는 시점부터 얼마만큼 viewport크기를 줄였는가를 기준으로 줄어듦 
+
+  - `flex-basis`: Item의 기본 너비 설정
+    - inline요소에도 줄 수 있음
+    - 기본값 auto
+    - 단축 속성 사용할 때 flex-basis를 생략하게 되면 auto아닌 0이 들어감 주의
+
+- `align-self`: 교차축을 기준으로 Item을 정렬하는 방법을 설정
+
+  - align-items: container 안에 모든 item들의 교차축으로 한 정렬 방법 설정
+  - align-self: 개별 아이템, align-item보다 우선순위 높음
+  - stretch, flex-start, flex-end, center, space-between, space-around, baseline
+  - default 값 auto
+
+
 

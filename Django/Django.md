@@ -105,9 +105,10 @@
 
   - `$ python manage.py runserver`
     - `python manage.py runserver localhost:8000`로도 가능
-
   - ctrl+click 하면 실행 화면 뜸 로켓이 뜨면 정상적으로 작동하는 것 
+    - 로켓은 서버 시작한 맨 처음에만 나오며 작업하기 시작하면 나오지 않음
 
+  
   ![image-20220302095318880](Django.assets/image-20220302095318880.png)
   
   - 서버 끄는 방법: `ctrl+c`
@@ -225,21 +226,35 @@ urlpatterns = [
 from django.shortcuts import render
 
 def index(request):
-    return render(request, <template 경로>)
+    # context = {
+    #    'a': a
+    # }
+    return render(request, <template 경로>(, context))
 ```
 
+- 모든 view는 함수형태로 적음
 - 필수 인자 requests
   - HTTP request 객체: 클라이언트가 보낸 모든 정보가 다 들어가 있음
 - render
   - import render 활용
+  - 템플릿을 읽어서 HTML 문서(HTTP response) 형태로 만들어줌
   - 첫번째 인자를 requests로 받게 설계되어있음
   - 두번째 인자는 템플릿 경로
-  - 템플릿을 렌더링해서 리턴해줌
+  - 세번째 인자는 view에서 가공한 데이터를 HTML에서 사용하기 위해 넘겨줄 때 사용하며 view와 템플릿이 데이터를 주고 받는 창구 역할로 선택사항임
+    - `context = {}`로 표현해 넘겨줌
+    - 변수를 넣는다 생각
+
+![image-20220310132753721](Django.assets/image-20220310132753721.png)
+
+- 정상일 땐 상태코드가 200 잘못된 요청일 경우 404가 나옴
 
 ### Template
 
 - 자동으로 만들어지지 않음 앱에 직접 만들어야함
-- 경로: **app_name>templates**
+- 경로: **app_name>templates>app_name** 
+  - app_name 이름이 똑같은 디렉토리를 다시 만드는 것은 name space 이슈 때문
+    - 따라서 생략되기도 함
+
 
 ### 추가 설정
 
@@ -249,3 +264,55 @@ def index(request):
 - TIME_ZONE
 - 각각의 자세한 정보는 [공식문서](https://docs.djangoproject.com/en/4.0/ref/settings/) 찾아보기
 
+## Template
+
+- 데이터 표현을 제어하는 도구이자 표현에 관련된 로직
+  - 표현 = 사용자에게 보여지는 것
+- 동적인 웹페이지를 만든다는 것은 웹페이지가 수시로 바뀐다는 것
+  - view에서 template을 받아서 처리 해줘야함
+
+
+### Django Template Language(DTL)
+
+- 장고 템플릿 위에서 쓰는 별도의 문법
+- 조건, 반복, 변수 치환, 필터 등
+- 파이썬이 HTML에 포함되는 것, 파이썬 코드로 실행되는 것이 아니라 이름만 맞춘 것 (ex. for)
+- 프로그래밍적 로직 아니라 프레젠테이션(화면) 표현하기 위한 것
+
+#### Variable
+
+- `{{ variable }}`
+  - {}에서 한 칸씩 띄워줘야
+- render()를 사용해 views.py에서 정의한 변수를 template파일로 넘겨 사용
+- 파이썬 변수명 규칙과 동일
+- `.`으로 변수 속성에 접근
+- render() 세 번째 인자로 딕셔너리 형태로 넘겨주게 됨 여기서 key값을 template에서 사용하게 됨
+  - 변수 길어지면 return 위에 `context = {}` 로 만들어줌
+    - 변수명을 context로 짓는 것은 관행
+    - context의 key-value 값 똑같이 맞춤
+    - key로 접근하는 것이므로 왼쪽의 key이름을 써야한다는 것 기억
+- 리스트 그대로 출력, 특정 값만 출력하고 싶으면 인덱스 혹은 점으로 접근
+  - ex. `foods.0`
+
+#### Filters
+
+- `{{ variable|filter }}`
+  - 변수 뒤쪽에 파이프라인 뒤쪽으로 사용
+- 파이썬과 동일한 동작을 하는 필터들
+- 출력된 변수를 바꾸는 것
+- 여러 개 필터 chained(연결) 가능, 일부 필터 인자를 받기도
+
+#### Tags
+
+- `{% tag %}`
+- 반복이나 논리 수행, 변수보다 복잡한 일 수행
+- 일부태그는 시작과 종료 태그 필요
+  - ex. `{% if %} {% endif %}`
+
+- [공식문서](https://docs.djangoproject.com/en/4.0/ref/templates/builtins/) 참고
+
+#### Comments
+
+- `{# #}` 한 줄 주석
+- `{% comment %} {% endcomment %} `여러 줄 주석은 열고 닫는 태그 존재
+- HTML 주석처리도 가능

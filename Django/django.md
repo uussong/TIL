@@ -183,9 +183,9 @@
 - 반드시 앱 생성 후 등록해야 함!
   - 먼저 등록하고 생성하려면 앱이 생성되지 않음
 - 앱 등록 순서를 지키면 좋음
-  - local apps 직접 만든 앱
-  - third party apps pip install로 설치하는 앱
-  - django apps 기본 앱
+  - local apps: 직접 만든 앱
+  - third party apps: pip install로 설치하는 앱
+  - django apps: 기본 앱
 
 
 
@@ -264,6 +264,8 @@ def index(request):
 - TIME_ZONE
 - 각각의 자세한 정보는 [공식문서](https://docs.djangoproject.com/en/4.0/ref/settings/) 찾아보기
 
+
+
 ## Template
 
 - 데이터 표현을 제어하는 도구이자 표현에 관련된 로직
@@ -316,3 +318,100 @@ def index(request):
 - `{# #}` 한 줄 주석
 - `{% comment %} {% endcomment %} `여러 줄 주석은 열고 닫는 태그 존재
 - HTML 주석처리도 가능
+
+### 작성 순서 
+
+- 데이터의 흐름에 맞춤
+  - urls.py -> views.py -> templates
+
+![image-20220310141349338](Django.assets/image-20220310141349338.png)
+
+![image-20220302143009379](Django.assets/image-20220302143009379.png)
+
+- urls.py에 따라 해당 값만 페이지 받을 수 있음
+- 코드 변경사항을 새로 저장하면 알아서 서버 재시작, 서버 껐다 켰다 할 필요없음
+- url은 언더바 사용않고 하이픈 사용 함수는 언더바 사용
+
+### Template inheritance(템플릿 상속)
+
+- `base.html`: skeleton 뼈대 역할의 템플릿
+- 부모 템플릿에 부트스트랩 CDN을 넣어두면 그 밑에 자식들은 자동으로 부트스트랩 적용됨
+  - 자식 템플릿 재정의
+- `{% extends '<부모템플릿 이름>' %}`
+  - 자식 템플릿이 부모 템플릿을 확장한다는 것을 알림
+  - 최상단에 작성
+- `{% block <이름> %} {% endblock (<이름>) %}`
+  - 자식 템플릿을 재정의 할 수 있는 블록 태그
+  - end태그에 이름쓰는 건 선택사항
+  - 자식 템플릿 html태그 싹 지우고 block안에 넣어줌
+    - 들여쓰기는 해도 되고 안 해도 됨
+  - block tag 이름을 맞춰 적어야함
+
+![image-20220302153519423](Django.assets/image-20220302153519423.png)
+
+- `'DIRS': [BASE_DIR / 'templates'],` (settings.py)
+  - object-oriented filesystem path
+  - `BASE_DIR`: 장고프로젝트 가지고 있는 최상단(root) 폴더
+  - 구동되는 운영체제에 맞춰 경로 읽음
+  - 기본적으로 앱 안의 templates 구조를 찾아가 읽는 것에서 추가 경로를 읽을 수 있게됨
+    - 원래 templates 위치 아닌 바깥에 있는 base.html 읽음
+
+- `{% include '<템플릿 이름>' %}`
+  - 템플릿 내에 다른 템플릿을 포함시키는 것 
+    - 다른 HTML 코드를 가져와서 이 자리에 넣겠단 의미
+  - include되는 템플릿은 앞에 `_`를 사용해 include되는 템플릿임을 나타냄
+
+### Django template system (feat. Django 설계 철학)
+
+- 표현과 로직을 분리
+  - 템플릿은 표현을 제어하는 도구, 표현에 관련된 로직
+    - 이를 넘어선 기능 제공할 필요 x
+- 중복을 배제
+  - 중복코드 없애야 -> 상속 개념
+
+ 
+
+## HTML Form
+
+### HTML form
+
+- 사용자 input을 받기 위해 사용
+- input을 받아 서버로 넘겨줌
+  - 서버가 처리해서 응답을 주는데 이 때의 서버가 장고
+- `<form action="" method="">`
+  - action: url 지정, input을 어디로 보내 처리할 건지 정해주는 것
+  - method: 데이터 전달 방식이 무엇인지 지정
+    - GET: 어떤 데이터를 달라고 요청할 때 사용
+    - POST: 글을 작성하거나 회원 가입을 하는 등 데이터를 저장해서 쓸 때 사용
+    - GET/POST는 의미론적인 것, 시멘틱
+
+### HTML input
+
+- `<input type="" name="">`
+  - type 속성에 따라 동작 방식이 달라짐
+  - name을 key로 사용해 사용자 데이터에 접근할 수 있음
+    - 양식을 서버로 넘겼을 때 서버에서 name을 넘겨주어 어떤 값인지 알게되며 그 설정된 값으로 해당 데이터를 가져올 수 있음
+  - GET방식은 url에 데이터를 담아서 넘겨주기에 보안 문제가 발생할 수 있음
+  - `~ip:port/articles/?name=aiden&address=seoul` ?부터의 key=value 형태를 쿼리 스트링이라 함 
+
+### HTML label
+
+- input에 대한 설명
+- input과 label을 연결하기 위해선 input의 id와 label의 for 속성에 동일한 값을 주면 됨
+  - label을 클릭해 input을 활성화 할 수 있음
+  - 화면 리더기에서 label을 읽어 input에 어떤 값을 입력해야 하는지 알기 쉬워짐
+
+### HTTP
+
+- HyperText Transfer Protocol
+  - hypertext를 주고받는 하나의 약속
+  - 인터넷web은 html문서를 주고받는 것, 이 때 문서에 대한 데이터 교환을 어떻게 할 것인가에 대한 약속
+- request method 종류: GET/POST/PUT/DELETE 등
+  - GET: 서버로 부터 어떤 정보를 달라고 요청, 정보를 얻고자 할 때 사용
+    - method를 생략하면 기본적으로 GET방식
+  - POST: 서버로 어떤 정보를 저장
+    - GET방식의 쿼리스트링과 달리 body 영역에 숨겨서 데이터 전송
+  - PUT/DELETE: 서버로부터 어떤 정보를 수정 / 삭제
+
+
+

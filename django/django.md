@@ -409,9 +409,67 @@ def index(request):
 - request method 종류: GET/POST/PUT/DELETE 등
   - GET: 서버로 부터 어떤 정보를 달라고 요청, 정보를 얻고자 할 때 사용
     - method를 생략하면 기본적으로 GET방식
+    - views.py에서 `message = request.GET.get('message')`와 같이 사용
+      - message는 form에서의 name
   - POST: 서버로 어떤 정보를 저장
     - GET방식의 쿼리스트링과 달리 body 영역에 숨겨서 데이터 전송
   - PUT/DELETE: 서버로부터 어떤 정보를 수정 / 삭제
 
 
 
+## URL
+
+- url이 들어온 request를 받아서 작성한 요청에 따라 잘 분배해줌
+
+### Variable Routing
+
+- url 일부를 변수로 지정해 view함수의 인자로 넘길 수 있음
+  - view에서 이를 가지고 조작
+- 변수값에 따라 하나의 path에 다양한 페이지를 맵핑(연결)시킬 수 있음
+
+#### URL Path converters
+
+- str: '/'제외 비어있지 않은 모든 문자열과 매치
+  - 디폴트
+- int: 정수
+- `accounts/user/<int:user_pk>/...`
+  - 이 자리에 오는 게 정수형태면 이를 user_pk에 담아서 view로 보내 view에서 이를 처리
+  - / 뒤에 오는 문자열을 view로 넘기고 view는 이를 템플릿에 넘김
+
+### App URL mapping
+
+- 각각의 앱이 urls.py를 가짐
+  - root의 urls.py에서 다른 앱 안의 urls.py를 import해줄 것 
+- 맨 처음 request가 들어오면 무조건 root의 urls.py가 받고 어떤 처리를 할 건지 분배함
+
+```python
+# firstpjt/urls.py
+from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path('pages/', include('pages.urls')),
+    path('articles/', include('articles.urls')),
+]
+
+
+# pages/urls.py
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('index/', views.index),
+]
+```
+
+- url로 `pages/index`가 들어오면 root(firstpjt)의 urls.py에서 앞에서 부터 일치하는 것을 찾아 처리함 `pages`까지 처리
+  - 각각의 앱 urls.py를 root의 urls.py에서 `include`로 포함
+- 그 뒤 `index`는 pages의 ulrs.py에서 처리하게 됨
+- url도 계층 구조로 작성할 수 있게 됨
+
+### Naming URL patterns
+
+- 각각의 url에 이름을 붙여놓고 템플릿에서 템플릿 태그를 이용해 url이름을 적어서 사용
+  - `{% url '<name>' %}`
+- 다른 앱에서 같은 url이름을 사용할 경우 문제가 생길 수 있어 url에 앱 이름을 명시해 사용
+  - `app_name: url_name`

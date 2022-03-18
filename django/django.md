@@ -65,7 +65,7 @@
   - 조작, 가공
 
 
-![image-20220302092505339](Django.assets/image-20220302092505339.png)
+![image-20220302092505339](django.assets/image-20220302092505339.png)
 
 - http요청 = 클라이언트 요청 받고 응답을 반환
 - 서버 클라이언트의 요청 받음 이 요청이 들어왔을 때 장고 서버에서 가장 먼저 요청을 받는 곳은 urls
@@ -439,7 +439,7 @@ def index(request):
 ### App URL mapping
 
 - 각각의 앱이 urls.py를 가짐
-  - root의 urls.py에서 다른 앱 안의 urls.py를 import해줄 것 
+  - root의 urls.py에서 다른 앱 안의 urls.py를 import해줄 것
 - 맨 처음 request가 들어오면 무조건 root의 urls.py가 받고 어떤 처리를 할 건지 분배함
 
 ```python
@@ -462,7 +462,7 @@ urlpatterns = [
 ]
 ```
 
-- url로 `pages/index`가 들어오면 root(firstpjt)의 urls.py에서 앞에서 부터 일치하는 것을 찾아 처리함 `pages`까지 처리
+- url로 `pages/index`가 들어오면 root(firstpjt)의 urls.py에서 앞에서 부터 일치하는 것을 찾아 `pages`까지 처리
   - 각각의 앱 urls.py를 root의 urls.py에서 `include`로 포함
 - 그 뒤 `index`는 pages의 ulrs.py에서 처리하게 됨
 - url도 계층 구조로 작성할 수 있게 됨

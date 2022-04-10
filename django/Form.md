@@ -160,16 +160,6 @@ class ArticleForm(forms.ModelForm):
 - Meta 데이터
   - 데이터에 대한 데이터
 
-- 모델 폼을 왜 쓰냐? 
-  - form 사용자의 정보를 입력받는 역할 일반적으로 이 정보를 db에 저장하게 됨
-    - form과 db는 밀접한 관련
-  - db의 구조를 그대로 form에서 사용하면 편함 
-  - db에 저장되는 input 구조에서 modelform 사용
-  - 실제 db에 저장된 데이터를 받으려면 modelform 사용해야
-- db와 연관 없지만 사용자의 입력을 받고 별도로 처리해야 한다면 form이 적합
-
-HTML form / Form Class / Model form 나눠서 정리해보자
-
 ### is_valid() method
 
 - 유효성 검사를 실행하고 데이터가 유효한지 여부를 boolean으로 반환
@@ -208,3 +198,21 @@ HTML form / Form Class / Model form 나눠서 정리해보자
 
 - 유효성 검사를 통과하지 못 하는 경우 `save()` 호출할 때 `print(form.errors)`로 에러 메세지 확인 가능
   - 어떤 에러를 냈는지 확인 가능
+
+### Form & ModelForm 비교
+
+- Form은 사용자의 정보를 입력받는 역할로 일반적으로 해당 정보를 DB에 저장하게 됨
+  - Form과 DB는 밀접한 관련
+- Form
+  - DB(Model)와 연관 없지만 사용자의 입력을 받고 별도로 처리해야 한다면 Form이 적합
+  - 일반 Form class를 쓰면 초기값 키워드 인자로 매핑을 따로 다 해줘야 함
+- ModelForm
+  - DB의 구조를 그대로 Form에서 사용하면 편함 
+  - DB에 저장되는 input 구조에서 ModelForm 사용
+    - 실제 DB에 저장된 데이터를 받으려면 ModelForm 사용해야
+  - 모델 폼에선 데이터가 어떤 col에 매칭될 지 다 매핑되어있음 
+    - form.save()
+
+### forms.py 파일 위치
+
+- 정해진 위치 없으나 app폴더/forms.py가 일반적 구조

@@ -10,7 +10,7 @@
 
 ## ManytoManyField
 
-- 다대다(M:N) 관게 설정 시 사용하는 모델 필드
+- 다대다(M:N) 관계 설정 시 사용하는 모델 필드
 
 - M:N 관계로 설정한 모델 클래스를 필수 인자로 받음
 
@@ -109,11 +109,12 @@
 
   - 대칭이라는 의미
   - ManyToManyField가 동일한 모델을 가리키는 정의에서만 사용
-    - self를 썼을 때
+    - 모델이 self인 경우
   - symmetrical = True(기본값)일 경우 역참조가 동시에 일어나 역참조 매니저(`_set`)가 필요 없어짐
   - source 모델(관계 필드를 가진 모델)의 인스턴스가 target 모델(관계 필드를 가지지 않은 모델)의 인스턴스를 참조하면 target모델 인스턴스도 source 모델 인스턴스를 자동으로 참조하도록 함
     - 즉 팔로우를 하게 될 경우 바로 맞팔이 됨
     - 대칭을 원하지 않는 경우 False로 설정
+  - User 모델을 대체해놓았기 때문에 사용 가능
 
 ### Related Manager
 
@@ -143,3 +144,105 @@
   doctor1.patient_set.remove(patient1)
   patient2.doctors.remove(doctor1)
   ```
+
+
+
+## Like
+
+- User와 Article 간의 좋아요에 대한 관계는 M:N
+  - 한 명의 유저는 여러 게시글에 좋아요를 누를 수 있고 게시글은 여러 유저의 좋아요를 받을 수 있음
+  - User와 Article은 이미 게시글 작성에 대한 1:N관계
+- MantyToManyField 어느 class 두던 상관 없음
+  - User에 별다른 작성을 하고 있지 않으니 Article에 작성하자
+  - 필드명은 복수형으로 작성
+    - `like_users`로 필드명을 지은 것은 보다 직관적으로 어떤 기능인지 알게하기 위함
+
+```python
+from django.db import models
+from django.conf import settings
+
+class Article(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_articles')
+    title = models.CharField(max_length=10)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.title
+```
+
+- models.py 에서 유저 모델 참조할 땐 무조건 `settings.AUTH_USER_MODEL`사용
+
+![image-20220418141020566](데이터베이스 관계(M-N).assets/image-20220418141020566.png)
+
+- 기존의 1:N 관계에서의 역참조 manager 이름이 M:N과 겹침 
+  - 역참조는 자동으로 `article_set` manager 설정
+  - M:N 관계에서의 역참조 manager 이름을 바꾸면 해결됨 
+    - `related_name`사용
+  - 혹은 User 모델에 작성했다면 이런 문제는 발생하지 않았음
+- migrate 한 후에는 Article과 User간의 다대다(M:N) 관계를 저장하기 위한 중개 테이블이 작성됨
+
+```python
+@require_POST
+def likes(request, article_pk):
+    if request.user.is_authenticated:
+        article = get_object_or_404(Article, pk=article_pk)
+        # 이 게시글에 좋아요를 누른 유저 목록에 현재 요청하는 유저가 있다면 좋아요 취소
+        # if request.user in article.like_users.all():
+        if article.like_users.filter(pk=request.user.pk).exists():
+            article.like_users.remove(request.user)
+        else:
+            article.like_users.add(request.user)
+        return redirect('articles:index')
+    return redirect('accounts:login')
+```
+
+- 어떤 게시글에 좋아요가 눌릴지 조건을 살펴봐야함
+  - 게시글에 좋아요를 누른 유저 목록에 현재 요청하는 유저가 있는지 여부로 좋아요/좋아요 취소 기능을 나눠 구현
+  - `like_users` 이 게시글에 좋아요를 누른 유저 목록
+- `exists()`
+  - 쿼리셋에 결과가 포함되어 있으면 True 그렇지 않으면 False 반환
+  - 규모가 큰 쿼리셋에서 특정 개체 존재 여부와 관련된 검색에 유용
+  - 고유한 필드가 있는 모델이 쿼리셋의 구성원인지 여부를 찾는 가장 효율적인 방법
+    - in 보다 더 효율적, in은 모든 객체를 다 가져온 뒤 거기서 특정 개체가 있는지 확인해 오래 걸림
+
+
+
+## Profile Page
+
+```python
+# accounts/urls.py
+
+from django.urls import path
+from . import views
+
+app_name = 'accounts'
+urlpatterns = [
+    path('login/', views.login, name='login'),
+    path('logout/', views.logout, name='logout'),
+    path('signup/', views.signup, name='signup'),
+    path('delete/', views.delete, name='delete'),
+    path('update/', views.update, name='update'),
+    path('password/', views.change_password, name='change_password'),
+    path('<username>/', views.profile, name='profile'),
+    path('<int:user_pk>/follow/', views.follow, name='follow'),
+]
+```
+
+- 문자열 변수를 사용하는 url을 맨 위에 만들 경우 문제 발생
+- 아래의 url 또한 문자열이므로 맨 위의 view함수에 걸리게 됨
+  - url 요청이 들어올 경우 위에서부터 아래로 탐색하기 때문
+  - username으로 인식 
+    - login유저 페이지, logout유저 페이지 ...
+- variable routing이 문자열일 경우 맨 나중에, 맨 밑에서 처리해야 함
+
+```python
+def profile(request, username):
+	User = get_user_model()
+    person = get_object_or_404(User, username=username)
+```
+
+- User가 참조하는 AbstractUser에 username이라는 필드가 있음
+- username은 유일한 값이므로 기존의 pk역할을 대체할 수 있음

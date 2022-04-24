@@ -172,6 +172,343 @@
 - REST API와 같은 말
 - 프로그램을 통해 해당되는 클라이언트에 대한 요청에 JSON을 응답하는 서버를 구성
 - 오늘 사용하는 장고 서버가 REST API 서버가 되는 것
+- REST API를 사용하는 서비스를 RESTful 서비스라고 함
+
+#### RESTful 하게 짜는 법
+
+- URL은 리소스를 나타내기 위해서만 사용하고, 리소스에 대한 처리는 메서드로 표현
+- Document는 단수명사로, Collection은 복수명사로 표현 (URL 네이밍 관련)
+  - Document가 모여서 있는게 Collection
+    - 각각의 article이 Document / article 모여있는 게 Collection
+    - `~/articles/1` s를 항상 붙여줘야함 articles은 Collection, 1이 Document
+    - 여러 개 article이 모여있는 Collection에 POST 요청을 보내면 article 생성
+- 꼭 JSON을 쓰는 건 아니지만 오늘날 보통 JSON 사용
 
 
+
+## Single Model
+
+### DRF with Single Model
+
+- Django REST framework 라이브러리를 이용한 JSON응답
+- `pip install djangorestframework`
+
+```python
+# settings.py
+
+INSTALLED_APPS = [
+    'articles',  # 앱 이름
+    'django_seed',
+    'rest_framework',
+    ...
+]
+```
+
+- settings.py에 `INSTALLED_APPS`에 적어주어야 함
+- 단일 모델의 data를 serialization해 JSON으로 변환하는 방법
+
+####  Serialization
+
+- 직렬화
+- 데이터 구조나 객체 상태를 동일하거나 다른 컴퓨터 환경에 저장하고, 나중에 재구성할 수 있는 포맷으로 변환하는 과정
+- Queryset을 JSON 등 유형으로 쉽게/유연하게 변환할 수 있는 객체로 만들어 주는 것
+- Queryset 데이터를 JSON과 같은 다른 데이터로 응답을 해줘야하는데 이를 유연하게 변경할 수 있도록하는 중간 과정의 데이터 타입으로 변경하는 것이 Serialization 과정
+- 중간 단계의 모습, 파이썬 데이터 타입을 최종적으로 JSON으로 변환할 것
+
+### Postman
+
+- Postman으로 브라우저 대체해 사용
+- API를 구축하고 사용하기 위해 여러 도구를 제공하는 API 플랫폼
+
+### Create Dummy Data
+
+- 모델 구조에 맞는 fake data 생성
+- 역시 설치 후 `INSTALLED_APPS`에 `'django_seed'`를 적어줘야 함
+- `python manage.py seed <모델명> --number=개수`
+
+### ModelSerializer
+
+- 모델 필드에 해당하는 필드가 있는 Serializer 클래스를 자동으로 만들 수 있는 shortcut
+  - 모델폼과 같이 모델에 맞춰서 serialize 컬럼을 조정
+  - serializer를 modelform이라 생각하자
+- 핵심 기능
+  - 모델 정보에 맞춰 자동으로 필드 생성
+  - serializer에 대한 유효성 검사기 자동으로 생성
+  - `.create()` `.update()` 간단한 기본 구현 표함
+- 유저에게 보여주는 정보가 아니기 때문에 어떤 필드 내려줄지는 프론트앤드 개발자와 얘기해 설계하는 것
+- 쿼리셋 전체에 대해 시리얼라이징 해주는 모델시리얼라이저를 만들 것
+- `serializers.py`를 만들어 작성
+  - 꼭 이름이 `serializers.py`일 필요는 없음
+  - 갯수가 많아지면 `serializers` 디렉토리를 만들어 그 안에 모델별로 파일을 만들어 관리하게 됨
+
+
+### GET - Article List
+
+- url에서 app name, url name 불필요 템플릿이 따로 없기 때문
+- 전체 게시글 응답을 JSON형태로 나타내는 view함수를 작성해야함
+
+```python
+# articles/serializers.py
+
+class ArticleListSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Article
+        fields = ('id', 'title',)
+```
+
+```python
+# articles/views.py
+
+@api_view(['GET'])
+def article_list(request):
+    articles = get_list_or_404(Article)
+    serializer = ArticleListSerializer(articles, many=True)
+    return Response(serializer.data)
+```
+
+- `get_list_or_404` 
+
+  - 조회하고자 없는 쿼리셋이 없으면 404 return 
+
+- `many=True`
+
+  - QuerySet 등 여러 인스턴스를 직렬화 할 때 사용
+
+- `api_view` decorator
+
+  - view 함수가 응답해야 하는 HTTP Method 목록을 리스트 인자로 받음
+  - 필수로 작정해야 함 작성하지 않으면 view함수 동작 x
+
+  ![image-20220420141333330](REST API.assets/image-20220420141333330.png)
+
+  - `api_view` 데코레이터를 붙여주지 않으면 500에러가 뜸
+
+### GET  - Article Detail
+
+- Article List와 Detail 구분
+  - 응답 출력에서 두 개의 컬럼만 조회 단일 데이터 조회(detail)에서는 모두 조회하도록 설계
+  - 보여지는 정보가 다르니까 serializer class를 따로 만들어야 함
+
+```python
+# articles/serializers.py
+
+class ArticleSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Article
+        fields = '__all__'
+
+```
+
+```python
+# articles/views.py
+
+@api_view(['GET'])
+def article_detail(request, article_pk):
+    articles = get_object_or_404(Article, pk=article_pk)
+    serializer = ArticleListSerializer(articles)
+    return Response(serializer.data)
+```
+
+- `get_object_or_404` 와 `get_list_or_404` 구별
+- 하나의 객체를 받아오는 것이므로 many=False(디폴트값)가 됨
+
+### POST - Create Article
+
+- view 함수 article_list에서 게시글 조회, 생성 모두 처리 가능
+  - `elif request.method ==''`방식으로 GET, POST 등 [Method 구분]((https://www.django-rest-framework.org/tutorial/2-requests-and-responses/#pulling-it-all-together)) 
+
+```python
+# articles/views.py
+
+@api_view(['GET', 'POST'])
+def article_list(request):
+    if request.method == 'GET':
+        articles = get_list_or_404(Article)
+        serializer = ArticleListSerializer(articles, many=True)
+        return Response(serializer.data)
+
+    elif request.method == 'POST':
+        serializer = ArticleSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        # return Response({"result": "fail"}, status=status.HTTP_400_BAD_REQUEST)
+```
+
+- Serializer의 첫번째 인자가 인스턴스 두번째가 데이터이기 때문에 데이터만 받을 경우 키워드 인자로 데이터를 넣음
+
+- Status Code in DRF
+
+  ![image-20220421144036734](REST API.assets/image-20220421144036734-16507994580551.png)
+
+  - `status=status.HTTP_201_CREATED`
+  - status code 200이 default 이를 바꿔주기 위해 따로 처리해 주는 것
+
+  - `from rest_framework import status` 모듈안에 속성값들(HTTP status code 집합)이 존재
+    - status를 좀 더 명확히 명시적으로 보낼 수 있게 됨
+  - 단순히 `status=201` 표현도 가능하지만 권장하지 않음
+
+![image-20220421144247454](REST API.assets/image-20220421144247454-16507996560442.png)
+
+- HTTP body에 form-data로 데이터 key-value 작성
+- `raise_exception`
+  - `is_valid(raise_exception=True)`
+  - 유효성 검사 오류가 있는 경우 기본적으로 HTTP status code 400을 응답으로 반환
+    - 왜 오류가 났는지에 대한 디테일한 정보 또한 제공
+  - `return Response({"result": "fail"}, status=status.HTTP_400_BAD_REQUEST)` 과 같이 써줄 필요 없어짐
+
+### DELETE - Delete Article / PUT - Update Article
+
+- view 함수 article_detail에서 게시글 조회, 삭제, 수정 모두 처리 가능 
+
+```python
+@api_view(['GET', 'DELETE', 'PUT'])
+def article_detail(request, article_pk):
+    article = get_object_or_404(Article, pk=article_pk)
+    if request.method == 'GET':
+        serializer = ArticleSerializer(article)
+        return Response(serializer.data)
+    
+    elif request.method == 'DELETE':
+        article.delete()
+        return Response({f'{article_pk} deleted'}, status=status.HTTP_204_NO_CONTENT)
+
+    elif request.method == 'PUT':
+        serializer = ArticleSerializer(article, data=request.data) #, partial=True)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(serializer.data)
+```
+
+- Delete
+  - `status=status.HTTP_204_NO_CONTENT`
+- Update
+  - serializer가 인스턴스와 데이터 모두를 인자로 받아옴
+  - article object를 request에 있는 데이터로 수정해줌
+  - title, content 중 하나만 수정하면 에러
+    - [partial=True](https://www.django-rest-framework.org/api-guide/serializers/#partial-updates) 붙이면 해결 가능
+    - PUT 전체 다 바꿀 때 쓰는 것 PATCH 부분 수정을 의미 하나 PUT으로 다 써도 무방
+
+
+
+## 1:N Relation
+
+### DRF with 1:N Relation
+
+- 2개 이상의 1:N 관계를 맺는 모델을 두고 CRUD 로직을 수행 가능하도록 설계
+
+### POST - Create Comment
+
+```python
+# articles/urls.py
+urlpatterns = [
+    ...
+    path('articles/<int:article_pk>/comments/', views.comment_create),
+]
+```
+
+```python
+# articles/views.py
+
+@api_view(['POST'])
+def comment_create(request, article_pk):
+    article = get_object_or_404(Article, pk=article_pk)
+    serializer = CommentSerializer(data=request.data)
+    if serializer.is_valid(raise_exception=True):
+        serializer.save(article=article)
+        return Response(serializer.data, status=status.HTTP_201_CREATE
+```
+
+- Comment 생성은 생성 시 참조하는 모델의 객체 정보가 필요
+
+  - 1:N 관계에서 N은 어떤 1을 참조하는지에 대한 정보가 필요하기 때문 (외래 키)
+
+- `.save()`
+
+  - `serializer.save(article=article)`
+  - 특정 Serializer 인스턴스를 저장하는 과정에서 저장하는 시점에 추가적인 데이터를 받을 수 있음
+
+- Read Only Field (읽기 전용 필드)
+
+  ```python
+  # article/serializers.py
+  
+  class CommentSerializer(serializers.ModelSerializer):
+  
+      class Meta:
+          model = Comment
+          fields = '__all__'
+          read_only_fields = ('article',)
+  ```
+
+  - 어떤 게시글에 작성하는 댓글인지에 대한 정보를 form-data로 넘겨주지 않았고 null = False이므로 article 필드가 유효성 검사를 통과하지 못함
+  - 읽기 전용 필드로 설정해 serialization할 때 유효성 검사(validation: is_valid)에서는 빠지고 serializer.data에서는 읽을 수 있게 데이터를 넣어줄 수 있음
+    - article을 form-data로 넘겨주지 않고 content만 보내더라도 유효성 검사를 통과하게 됨
+
+### 1:N Serializer
+
+#### 특정 게시글에 작성된 댓글 목록 출력
+
+- 게시글 조회할 때 (1:N으로 연결된) 댓글 데이터도 출력하고 싶다면 기존 필드를 덮어씌우거나 추가 필드를 구성해야 함
+
+##### `PrimaryKeyRelatedField`
+
+```python
+# article/serializers.py
+
+class ArticleSerializer(serializers.ModelSerializer):
+    comment_set = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    
+    class Meta:
+        model = Article
+        fields = '__all__'
+```
+
+- Article의 pk를 참조하는 comment를 역참조 하겠다는 것
+
+  - 역참조 매니저를 기존 필드라고 생각
+
+- 1:N 구조에서 N인 comment를 가져오는 것이므로 `many=True` 추가
+
+- `read_only = True`
+
+  - 기존 필드(메타클래스의 fields)에 존재하지 않는 추가로 커스텀한 경우 
+  - 메타 클래스의 `read_only_fields`는 모델에 정의된 필드에 대한 것
+
+  ![image-20220421171310948](REST API.assets/image-20220421171310948-16508025471443.png)
+
+- 클라리언트가 게시글 하나만 조회해도 여기에 달린 댓글 정보도 확인할 수 있게 함
+  - pk정보만 뜸
+
+##### Nested relationships
+
+```python
+# article/serializers.py
+
+class CommentSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Comment
+        fields = '__all__'
+        read_only_fields = ('article',)
+        
+class ArticleSerializer(serializers.ModelSerializer):
+    comment_set = CommentSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Article
+        fields = '__all__'
+```
+
+- nested관계는 1:N 구조가 이루어진 상태에서만 가능
+- 참조된 대상은 참조하는 대상의 응답에 포함되거나 중첩될 수 있음
+  - 참조된 대상 1 참조하는 대상 N
+- 호출해야하는 클래스가 위에서 정의되어야함
+
+![image-20220421171501692](REST API.assets/image-20220421171501692.png)
+
+- 기존 serializer의 필드에서 모두 출력되게 했으므로(`fields = '__all__'`) 모든 정보를 다 볼 수 있음
+  - 1에서 N의 목록이 달려나옴
 

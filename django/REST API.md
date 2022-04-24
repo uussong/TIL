@@ -280,7 +280,7 @@ def article_list(request):
   - view 함수가 응답해야 하는 HTTP Method 목록을 리스트 인자로 받음
   - 필수로 작정해야 함 작성하지 않으면 view함수 동작 x
 
-  ![image-20220420141333330](REST API.assets/image-20220420141333330.png)
+  ![image-20220420141333330](REST API.assets/image-20220420141333330-16508040054242.png)
 
   - `api_view` 데코레이터를 붙여주지 않으면 500에러가 뜸
 
@@ -341,7 +341,7 @@ def article_list(request):
 
 - Status Code in DRF
 
-  ![image-20220421144036734](REST API.assets/image-20220421144036734-16507994580551.png)
+  ![image-20220421144036734](REST API.assets/image-20220421144036734-16508040378903.png)
 
   - `status=status.HTTP_201_CREATED`
   - status code 200이 default 이를 바꿔주기 위해 따로 처리해 주는 것
@@ -350,7 +350,7 @@ def article_list(request):
     - status를 좀 더 명확히 명시적으로 보낼 수 있게 됨
   - 단순히 `status=201` 표현도 가능하지만 권장하지 않음
 
-![image-20220421144247454](REST API.assets/image-20220421144247454-16507996560442.png)
+![image-20220421144247454](REST API.assets/image-20220421144247454-16508040605444.png)
 
 - HTTP body에 form-data로 데이터 key-value 작성
 - `raise_exception`
@@ -477,7 +477,7 @@ class ArticleSerializer(serializers.ModelSerializer):
   - 기존 필드(메타클래스의 fields)에 존재하지 않는 추가로 커스텀한 경우 
   - 메타 클래스의 `read_only_fields`는 모델에 정의된 필드에 대한 것
 
-  ![image-20220421171310948](REST API.assets/image-20220421171310948-16508025471443.png)
+  ![image-20220421171310948](REST API.assets/image-20220421171310948-16508040811985.png)
 
 - 클라리언트가 게시글 하나만 조회해도 여기에 달린 댓글 정보도 확인할 수 있게 함
   - pk정보만 뜸
@@ -507,7 +507,7 @@ class ArticleSerializer(serializers.ModelSerializer):
   - 참조된 대상 1 참조하는 대상 N
 - 호출해야하는 클래스가 위에서 정의되어야함
 
-![image-20220421171501692](REST API.assets/image-20220421171501692.png)
+![image-20220421171501692](REST API.assets/image-20220421171501692-16508039782751.png)
 
 - 기존 serializer의 필드에서 모두 출력되게 했으므로(`fields = '__all__'`) 모든 정보를 다 볼 수 있음
   - 1에서 N의 목록이 달려나옴

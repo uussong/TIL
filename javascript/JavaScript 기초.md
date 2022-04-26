@@ -7,7 +7,29 @@
   - 브라우저가 이해할 수 있는 프로그래밍 언어는 자바스크립트 뿐
   - HTML, CSS는 프로그래밍 언어가 아님
 
+### 브라우저
 
+- 웹 브라우저
+- 웹 문서를 받아서 우리 화면에 보여주는 역할
+- URL입력하면 웹 탐색해 서버와 통신하는 걸 자동으로 해줌
+- 서버에서 조작을 하면 결국엔 웹문서를 주게 된다. 그럼 이것을 브라우저가 받는다. 웹문서를 브라우저가 받아서 화면에 보여주게 됨
+
+## Browser
+
+- DOM(Document Object Model) 조작
+  - 문서 객체 모델
+  - head와 body로 이루어져있고 등등 각각을 DOM 즉 문서 객체, 각각을 객체로 봐서 소스 코드 자체를 트리 구조로 나타낸 것이 DOM
+- BOM
+  - 브라우저를 이 구조로 나눈 것
+  - 거의 조작하지 않음
+- 트리구조로 나타내면 계층 구조가 명확해져 요소에 바로 접근할 수 있게 됨
+- DOM해석을 브라우저가 해줌 이러한 과정을 파싱이라고 함
+  - 웹 문서를 구문 분석해서 DOM Tree로 만드는 과정
+  - 브라우저마다 분석하는 엔진이 달라 속도 차이가 나는 것
+    - 크롬 V8엔진, 굉장히 빠름 -> 이걸 개발할 때 쓸 수 없나..? Node.js
+- ECMAScript = JavaScript = (현재)ES6
+
+- script를 변경하자마자 script태그로가서 자바스크립트를 봄
 
 ## 변수와 식별자
 
@@ -73,11 +95,13 @@
       - 조건문 안에서 변수 선언했으면 밖에서 그대로 이어짐
   - 호이스팅
     - 변수를 선언 이전에 참조할 수 있는 현상
-    - 에러가 나야하는 게 정상이나 일단 undefined 넘겨주는 것
+      - 내가 사용하는 변수나 함수를 값은 아직 안 적지 않은 채 위쪽 레벨로 올려놓음 
+    - 에러가 나야하는 게 정상이나 일단 `undefined` 넘겨주는 것
       - 현재는 없지만 뒤에 있으니 끌어 올려서 메모리 상에서 처리
-    - let, const로 선언할 경우 Uncaught ReferenceError 발생
+    - `let`, `const`로 선언할 경우 Uncaught ReferenceError 발생
 - `console.log()` = `print()`
 - shift+enter 여러 줄 입력 가능
+- `log`쓰고 tab `console.log`
 
 
 
@@ -95,22 +119,25 @@
     - call by value
 - 참조 타입
   - 객체(object) 타입의 자료형
+  - 여러 개의 원시타입이 모인 덩어리 느낌
+    - Array, Function 등
+    - Function도 하나의 데이터 타입
   - 다른 변수에 복사할 때 참조 값이 복사됨
     - call by reference 얕은 복사
   - 같은 존재를 두 개의 이름으로 부르고 있었다..
 
 ### 원시 타입
 
-- 숫자(Number)
+- 숫자(`Number`)
 
   - 정수, 실수 구분 없는 하나의 숫자 타입
-  - 무한대 개념 Infinity 
-    - 1/0 에러가 나는 것 아닌 infinity
-    - -1/0 -infinity
-  - 산술 불가 NaN(Not a Number)
+  - 무한대 개념 `Infinity`
+    - 1/0 에러가 나는 것 아닌 `Infinity`
+    - -1/0 `-Infinity`
+  - 산술 불가 `NaN`(Not a Number)
     - 계산 불가능한 경우 반환하는 값
     - 숫자가 아니라고 하는 것이 숫자 자료형에 포함
-  - Infinity와 NaN 사용하는 것은 에러를 내지 않게 하기 위함
+  - `Infinity`와 `NaN` 사용하는 것은 에러를 내지 않게 하기 위함
 
 - 문자열(String)
 
@@ -121,7 +148,6 @@
 
   - 둘 다 값이 없음을 의미
     - 파이썬의 None이 두 개로 쪼개진 것
-  - 설계 미스..
   - `undefined` 
     - 개발자 의도가 담기지 않음
     - 함수 리턴값 없을 때 / 변수 선언하고 값을 안 줬을 때 자동으로 할당
@@ -129,16 +155,17 @@
     - 의도적으로 값이 없음을 표현하고 싶을 때
       - 여긴 값이 없어야 해! 표시
     - 자동생성되지 않음, null이라는 말을 직접 입력하지 않으면 볼 일 없음
-    - typeof null은 object 객체형 ... ㅎ
+    - typeof null은 object 객체형 ... 
 
-- Boolean
+- `Boolean`
 
-  - true / false 첫글자 대문자 아닌 소문자
+  - `true` / `false` 첫글자 대문자 아닌 소문자
 
 - 자동 형변환
 
-  - 조건문 또는 반복문에서 boolean이 아닌 데이터 타입은 자동 형변환 규칙에 따라 true나 false로 변환됨
-
+  - 조건문 또는 반복문에서 boolean이 아닌 데이터 타입은 자동 형변환 규칙에 따라 `true`나 `false`로 변환됨
+  - 거짓의 값을 갖은 것 falsy value / 참 값을 갖는 것 truthy value 라고 부르기도 함
+  
   | 데이터 타입 |    거짓    |        참        |
   | :---------: | :--------: | :--------------: |
   |  Undefined  | 항상 거짓  |        X         |
@@ -146,7 +173,7 @@
   |   Number    | 0, -0, NaN | 나머지 모든 경우 |
   |   String    | 빈 문자열  | 나머지 모든 경우 |
   |   Object    |     X      |     항상 참      |
-
+  
   - 비어있는 배열도 true
 
 
@@ -168,13 +195,16 @@
 ### 동등 비교 연산자 
 
 - `==`
-- 암묵적 형변환 `1 == '1'`의 결과가 true가 됨
+- 암묵적 형변환 
+  - `1 == '1'`의 결과가 true가 됨
+
 - 사용하지 말자..
 
 ### 일치 비교 연산자 
 
 - `===`
 - 엄격한 비교가 이뤄져 암묵적 타입 변환이 발생하지 않음
+- 타입과 값을 모두 비교함
   - 우리가 기대하는 비교 연산
 
 ### 논리 연산자
@@ -204,6 +234,8 @@
 
   - 조건 ? if : else 느낌
 
+- `if`와 `else`를 쓸 때 삼항연산자를 쓰는 걸 이쁜 코드라고 함
+
 
 
 ## 조건문
@@ -232,6 +264,7 @@
 
   - 조건은 소괄호 안에 작성
   - 실행할 코드는 중괄호 안에 작성
+    - 중괄호로 블럭을 만들어서 코딩을 한다고 생각
   - 닫히는 중괄호 뒤에 바로 `else (if)`가 옴
 
 ### `switch` statement
@@ -267,8 +300,9 @@ switch(operator) {
 - ()안에 값만 비교를 하겠단 의미, 어떤 값(case)에 해당하는지 판별
 - 아무것도 처리가 안된다면 default문 실행
   - 선택적 사용
-- break 구문이 각 case마다 들어가 있음 없다면 만족하는 조건 뒤에 오는 값이 다 출력이 되게 되어있음
-- 항상 break를 써주어야 해당 값만 출력되게 됨
+- break 구문이 각 case마다 항상 마지막에 넣어줘야 함 그래야 해당 값만 출력되게 됨
+  - 없다면 만족하는 조건 뒤에 오는 값이 다 출력이 되게 되어있음
+
 - 조건이 복합적이면 쓰기 어려움
 
 
@@ -302,9 +336,10 @@ for (let i=0; i<arr.length; i++) {
 ```
 
 - `for (initialization; condition; expression)`
-  - initialization 최초 반복문 진입 시 1회만 실행
-  - condition 매 반복 시행 전 평가
-  - expression 매 반복 시행 후 평가
+  - initialization 초기화: 최초 반복문 진입 시 1회만 실행
+  - condition 조건: 매 반복 시행 전 평가
+  - expression 표현식: 매 반복 시행 후 평가
+  - 각각을 `;`세미콜론으로 구분
 
 ### `for...in`
 
@@ -332,7 +367,7 @@ for (let capital in capitals) {
 
 ### `for...of`
 
-- 반복 가능한 객체를 순회 value값 나옴
+- 반복 가능한 객체를 순회하며 value값을 참조하는 옵션
 
   - 배열 순회
 
@@ -351,5 +386,215 @@ for (let capital in capitals) {
 
 
 
+## 함수
+
+- **자바스크립트의 함수는 값이다**
+
+  - 숫자, 문자열, 배열, object를 다 값이라 하는데 여기에 함수도 들어감
+  - 파이썬의 함수도 값이지만 자바스크립트에선 그 특징이 더 두드러짐
+- `const myFunc = function test() {}`
+- 함수란 소괄호를 통해서 실행할 수 있는 특징이 있는 값
+
+- 일급 객체
+  - 자연스럽게 변수에 할당이 가능함
+  - 변수에 들어갈 수 있다는 것은 다른 함수의 인자로 들어갈 수 있다는 의미
+  - 다른 함수의 return 값이 될 수도 있음
+  - 위와 같은 조건을 가진 객체를 일급객체라고 함
+
+### 함수 선언식
+
+```javascript
+function name(params) { // 함수명(파라미터)
+  // do~~                  로직
+}
+
+함수명(파라미터)()
+```
+
+- `let a = 1`, `const b = 5` 등으로 `let`, `const`를 사용하듯이 `function`을 앞에 써주는 것
+
+### 함수 표현식
+
+```javascript
+// 1
+let 함수명 = function 함수명2(파라미터){
+  로직
+}
+// 2
+let 함수명 = function (파라미터) {
+  로직
+}
+
+함수명(파라미터)
+```
+
+- 정의한 함수를 별도의 변수에 할당하는 것
+- 함수의 이름이 필요가 없기 때문에 보통 2번의 형태로 사용
+- 자바스크립트에선 익명함수를 쓰는 데, 함수의 인자를 쓰는데 제약이 없음 코드 열 줄을 쓰기도 함
+  - 익명함수는 한 번 선언하고 나서 부르지 않겠다는 것
+
+### 기본인자 
+
+```javascript
+기본인자
+let sayHi = function (name = 'noName'){
+  console.log(`${name} 하이하이`);
+}
+
+sayHi() // noName 하이하이
+sayHi('uusong') // uussong 하이하이
+```
+
+- default 값을 넣을 수 있는 것
+
+### 매개변수와 인자의 개수 불일치허용
+
+- 매개변수보다 인자의 개수가 많을 경우
+
+  ```javascript
+  const noArgs = function () {
+      return 0
+  }
+  noArgs(1, 2, 3) // 0
+  
+  const twoArgs = function (arg1, arg2) {
+      return [arg1, arg2]
+  }
+  twoArgs(1, 2, 3) // [1, 2]
+  ```
+
+  - 매개변수 개수만큼만 값을 넘겨줌
+
+- 매개변수보다 인자의 개수가 적을 경우
+
+  ```javascript
+  const threeArgs = function (arg1, arg2, arg3) {
+      return [arg1, arg2, arg3]
+  }
+  threeArgs()	// [undefined, undefined, undefined]
+  threeArgs(1) // [1, undefined, undefined]
+  threeArgs(1, 2) // [1, 2, undefined]
+  ```
+
+  - 부족한 만큼 `undefined` 반환
+
+### Rest Parameter
+
+```javascript
+const restOpr = function (arg1, arg2, ...restArgs) {
+    return [arg1, arg2, restArgs]
+}
+restArgs(1, 2, 3, 4, 5) // [1, 2, [3, 4, 5]]
+restArgs(1, 2)	// [1, 2, []]
+```
+
+- `...`를 사용해 매개변수보다 인자가 더 많은 것을 배열로 받음
+  - 인자가 부족할 경우 `undefined`가 아닌 빈 배열로 처리
+
+### Spread operator
+
+```javascript
+const spreadOpr = function(arg1, arg2, arg3){
+  return arg1 + arg2 + arg3
+}
+const numbers = [1, 2, 3]
+spreadOpr(...numbers) // 6
 
 
+const spreadOpr2 = function(arg1, arg2, arg3, arg4){
+  return arg1 + arg2 + arg3 + arg4
+}
+const numbers = [1, 2, 3]
+
+console.log(twoArgs(...numbers, 4)); // 10
+```
+
+- `...`를 사용해 배열 인자를 전개함, 펼쳐줌
+- 전개하고 남은 매개변수는 들어오는 인자로 처리
+
+### 호이스팅(hoisting)
+
+#### 함수 선언식
+
+```javascript
+console.log(myFunc()) // true
+
+function myFunc(arg1) {
+  return true
+}
+```
+
+- 함수 선언식으로 선언한 함수에선 호이스팅이 일어남
+
+  - 함수를 통째로 브라우저가 실행하기 전에 메모해놓음
+- 함수 호출 이후에 선언해도 동작
+
+#### 함수 표현식
+
+```javascript
+console.log(myFunc()) // Uncaught ReferenceError: myFunc is not defined
+
+const myFunc = function(arg1, arg2, arg3, ar4) {
+    return arg1 + arg2 + arg3 + arg4
+}
+```
+
+- 함수 표현식으로 선언한 함수에선 호이스팅이 일어나지 않고 에러 발생
+
+  - 함수를 표현식으로 쓰는 순간 더 이상 함수라기 보다는 변수의 스코프 규칙을 따르게 되기 때문 
+
+    - const 스코프에 종속
+
+- var로 함수 표현식을 작성하면 호이스팅이 일어날까?
+
+  ```javascript
+  console.log(testFunc()) // Uncaught ReferenceError: myFunc is not defined
+  
+  var testFunc = function(arg1, arg2, arg3, arg4) {
+    return arg1 + arg2 + arg3 + arg4
+  }
+  
+  // 위 함수는 밑의 함수의 로직과 같음
+  
+  var testFunc
+  console.log(testFunc());
+  testFunc = function(arg1, arg2, arg3, arg4) {
+    return arg1 + arg2 + arg3 + arg4
+  }
+  ```
+
+  - 함수가 아니라는 오류가 뜸
+
+  - testFunc이 있긴 하다는 걸 적어두었으나 단순히 이름만 적어둔 것, 변수 선언만 호이스팅 됨
+
+  - 실행시점에선 내부적으로 `undefined` 타입, `undefined()`를 수행하는거나 마찬가지
+
+    
+
+## Arrow Function
+
+- 화살표 같은 형식의 함수
+- 함수를 비교적 간결하게 정의할 수 있는 문법
+
+```javascript
+// 일반적인 함수 표현식
+const arrow1 = function (name) {
+  return `${name}님 안녕하세요?`
+}
+
+const arrow2 = (name) => {
+  return `${name}님 안녕하세요?`
+}
+
+const arrow3 = name => {
+  return `${name}님 안녕하세요?`
+}
+
+const arrow4 = name => `${name}님 안녕하세요?`
+```
+
+- `=>` 형태로 쓰면 function이라는 키워드를 생략할 수 있음
+- 매개변수가 한 개이면 소괄호마저 생략할 수 있음
+- return, 로직이 한 줄이라면 `return`, `{ }` 생략할 수 있음
+
+- Lexical Scope 함수를 어디에서 호출했는지가 중요한 게 아니라 어디에서 선언(=정의)했는지가 중요

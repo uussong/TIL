@@ -59,6 +59,7 @@
   - 재할당 가능
     - 정말 변수의 의미
   - 재선언 불가능
+  
 - `const`
   - 재할당 할 예정이 없는 변수 선언 시 사용
   - 재할당 불가능 
@@ -67,11 +68,16 @@
   - 값을 바꾸는 걸 못 하는 게 아닌 재할당을 못 하는 것
     - mutable한 개체를 바꾸는 것 가능
     - 기존에 가지고 있던 값을 조작하는 것은 가능
+  
+  - 한번 참조한 객체는 끝가지 그것만 참조
+  
   - 재선언 불가능
+  
 - 언제 let const 쓰는 게 맞을까?
   - 선언하는 순간 판단하는 건 어려움
   - 그래서 기본적으로 const 사용
     - 의외로 재할당하는 경우 거의 없음
+  
 - 선언 / 할당 / 초기화
   - 선언: 변수를 생성하는 행위 또는 시점
   - 할당: 선언된 변수에 값을 저장하는 행위 또는 시점
@@ -80,12 +86,14 @@
     - 값 없이 선언만 할 수 있음
       - 예약하듯이 이름만 선점
   - 키워드가 있어야 변수를 선언하고 할당할 수 있구나
+  
 - 블록 스코프(block scope)
   - if, else, 함수 블록을 표현할 때 사용하는 중괄호 내부
   - 블록 안에서 일어난 일은 밖에서 접근할 수 없음
   - indent와 관련
   - 자바스크립트에서는 스코프가 함수가 아니라 중괄호 기준으로 움직인다는 걸 기억
     - cf) 함수 스코프
+  
 - `var`
   - 구버전 자바스크립트는 let, const 대신 var로 변수 표현
     - 현재 사용하지 않음
@@ -99,8 +107,11 @@
     - 에러가 나야하는 게 정상이나 일단 `undefined` 넘겨주는 것
       - 현재는 없지만 뒤에 있으니 끌어 올려서 메모리 상에서 처리
     - `let`, `const`로 선언할 경우 Uncaught ReferenceError 발생
+  
 - `console.log()` = `print()`
+
 - shift+enter 여러 줄 입력 가능
+
 - `log`쓰고 tab `console.log`
 
 
@@ -512,6 +523,16 @@ console.log(twoArgs(...numbers, 4)); // 10
 - `...`를 사용해 배열 인자를 전개함, 펼쳐줌
 - 전개하고 남은 매개변수는 들어오는 인자로 처리
 
+```javascript
+const array = [1, 2, 3]
+const newArray = [0, ...array, 4]
+
+console.log(newArray) // [0, 1, 2, 3, 4]
+```
+
+- 배열 내부에서 배열 전개 가능
+- 얕은 복사
+
 ### 호이스팅(hoisting)
 
 #### 함수 선언식
@@ -598,3 +619,428 @@ const arrow4 = name => `${name}님 안녕하세요?`
 - return, 로직이 한 줄이라면 `return`, `{ }` 생략할 수 있음
 
 - Lexical Scope 함수를 어디에서 호출했는지가 중요한 게 아니라 어디에서 선언(=정의)했는지가 중요
+
+
+
+## 문자열 (String)
+
+- 문자열: 각각의 문자가 하나로 모여있는것
+- [문자열 관련 메서드 정보](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/String#%EC%9D%B8%EC%8A%A4%ED%84%B4%EC%8A%A4_%EB%A9%94%EC%84%9C%EB%93%9C)
+
+## 배열 (Arrays)
+
+- 순서가 있는 자료형
+- 앞에서부터 인덱스가 부여되어 있음
+- 음수 인덱스 활용 불가 `undefined`
+- 마지막 원소를 알기 위해선 `arr.length` 로 길이를 알아내 접근
+  - `arr[arr.length-1]`
+
+- [배열 관련 메서드 정보](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Array#%EC%9D%B8%EC%8A%A4%ED%84%B4%EC%8A%A4_%EB%A9%94%EC%84%9C%EB%93%9C)
+
+### 배열을 순회하며 특정 로직을 수행하는 메서드
+
+- 메서드 호출 시 인자로 콜백함수를 받음
+  - 배열을 순회하며 특정메서드를 수행하는데 이 때 콜백함수를 실행하려 하는 것
+- 콜백함수란 그냥 함수인데 메서드 호출할 때 인자로 넘겨받는 함수
+  - 메서드에 인자값으로 전달되는 함수
+  - `myFunc(myFunc2)` 마이펑션 내부에서 마이펑션2 실행
+
+#### forEach
+
+````javascript
+myArr.forEach( (elem, idx, arr) => {
+  // 로직
+  console.log(elem, idx)
+  // console.log(arr) // 원본 배열이 넘어옴
+} )
+
+const images = [
+  { height: 10, width: 30 },
+  { height: 20, width: 90 },
+  { height: 54, width: 32 },
+]
+
+const areas = []
+images.forEach((elem) => {
+    // console.log(elem['height'])
+    console.log(elem.height)  // <<<<<< 추천 형식
+    // areas.push(elem['height']*elem['width'])
+    areas.push(elem.height * elem.width) 
+  }
+)
+
+console.log(areas)
+````
+
+- 배열을 순회하며 특정메서드를 수행하는데 이 때 콜백함수를 실행하려 하는 것
+- `forEach`에서 사용한 콜백함수를 밖에서 쓸일 없음 `forEach` 내에서 끝냄 
+- 콜백함수는 사용하는 인자가 정해져 있음
+  - arr 잘 쓰지 않음 보통 elem, index
+- 리턴 값 없음
+
+#### map
+
+```javascript
+const newArr = myArr.map( (elem, idx) => {
+   // 로직
+   return ~~
+ })
+
+const images = [
+    { height: '34px', width: '39px' },
+    { height: '54px', width: '19px' },
+    { height: '83px', width: '75px' },
+]
+
+const heights = images.map((elem) => {
+  return elem.height
+})
+
+console.log(heights)
+```
+
+- 콜백 함수의 반환 값을 요소로 하는 새로운 배열을 반환
+  - 기존 배열 전체를 다른 배열로 바꿀 때 유용
+  - 리턴 값을 각각 받아서 새로운 배열을 return
+- 배열을 순회하며 콜백함수 실행  한개 씩 한개씩 실행한 결과를 새로운 배열에 담아주는 것
+- 원본 배열을 건들지 않음
+
+#### filter
+
+```javascript
+const myArr = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+const newArr = myArr.filter( (elem, idx, arr) => {
+  return elem % 2		// 홀수 조건
+  // return !(elem % 2)  // 짝수 조건
+} )
+
+console.log(newArr) // [1, 2, 5, 7, 9]
+
+const numbers = [15, 25, 35, 45, 55, 65, 75, 85, 95]
+
+const newArr = numbers.filter((elem) => {
+  return 50 < elem
+})
+
+console.log(newArr) // [55, 65, 75, 85, 95]
+```
+
+- 모든요소를 반복해서 콜백함수 실행하며 작성한 로직을 통과해서 true가 return 되는 애들만 모아서 새로운 배열로 반환
+
+#### reduce
+
+```javascript
+myArr.reduce((acc, elem, idx, arr) => {
+   // 로직을 처리
+}, init )
+
+const myArr = [1, 2, 3, 4, 5]
+
+const rlt = myArr.reduce((acc, elem, idx, arr) => {
+  // console.log(acc)
+  return (elem * 2) + acc
+}, 0 )
+
+console.log(rlt) // 30
+```
+
+- acc accumulate 누적값을 모아줌
+- 최초의 arr 요소 하나씩 반복하며 콜백함수를 실행하며 return값을 하나하나 accumulate함(acc에 누적) 
+  - acc 값을 반환
+- `myArr.reduce((acc, elem, idx, arr) => {}, init )`
+- acc가 최초의 어떤 값일지를 저장해줘야 함 맨 마지막에 두번째 인자(`init`)로 들어감
+- `reduce`메소드에는 콜백함수 / 초기값(init) 두 개의 값이 들어가게 됨
+- 콜백함수 시행 독립시행 서로에게 영향 안 미치나 acc로 인해 기억하게됨 
+- acc를 이용해 누적시키거나 빼거나 할 수 있게 됨
+
+#### find
+
+```javascript
+const myArr = [1, 2, 3, 4, 5]
+
+myArr.find(() => {})
+const rlt = myArr.find((elem, idx, arr) => {
+  return elem > 3
+})
+
+console.log(rlt) // 4
+
+const avengers = [
+  {name: 'Tony Stark', age: 45},
+  {name: 'Steve Rogers', age: 32},
+  {name: 'Thor', age: 40},
+]
+
+const avenger = avengers.find((elem)=>{
+  return elem.age > 39
+})
+
+console.log(avenger.name) // Tony Stark
+```
+
+- 배열의 각 요소에 대해 콜백함수를 실행하며 콜백 함수의 반환 값이 true인 경우를 딱 하나를 찾는 순간 return하고 끝남
+- 찾는 값이 배열에 없으면 `undefined` 반환
+- 조건을 만족하는 값을 다 찾고 싶으면 `filter` 써야함
+
+#### some
+
+```javascript
+const myArr = [1, 2, 3, 4, 5]
+
+const rlt = myArr.some((elem) => {
+  // console.log(elem) // 1, 2, 3, 4
+  return elem > 3
+})
+
+console.log(rlt) // true
+```
+
+- 배열의 요소중에서 하나라도 콜백 함수의 반환 값이 true가 나오면 true를 리턴
+  - 체크하는 느낌 
+- return값이 `true` or `false`
+- 빈 배열은 항상 거짓
+
+#### every
+
+```javascript
+const myArr = [1, 2, 3, 4, 5]
+
+const rlt = myArr.every((elem) => {
+  // console.log(elem) // 1
+  return elem > 3
+})
+
+console.log(rlt) // false
+```
+
+- 배열의 모든 요소가 콜백 함수를 통과하면 true 하나라도 통과 못하면 false
+- 빈 배열은 항상 참
+
+
+
+## 객체 (Objects)
+
+```javascript
+const me = {
+  // 'firstName': 'John', // 속성
+  firstName: 'John',
+  lastName: 'Doe',
+  // fullName: this.firstName + this.lastName, // NaN
+  getFullName: function() { // 메서드
+    return this.firstName + this.lastName
+  }
+}
+```
+
+- JSON이 자바스크립트의 객체를 표현하는 방법
+  - 중괄호 내부의 key-value 쌍으로 표현
+  - key 문자열 타입만 가능
+  - value 모든 타임(함수도) 가능
+- `.`이나 `[ ]`로 접근 가능
+  - `.`을 보통 사용하나 띄어쓰기가 되어있다면 `[ ]`로만 접근 가능
+- 메서드는 객체 안에 들어가 있는 함수, JSON안에 들어가 있는 함수 형태
+  - value에 함수를 넣은 것
+- 메서드 내부에서 `this` 키워드는 객체를 의미
+  - `fullname`은 메서드가 아니기 때문에 `NaN`이 출력
+  - `getFullName`은 메서드이기 때문에 객체의 `firstName`과 `lastName`을 반환
+- key값이 문자열이어야 하는데 따옴표 없이 (문자열로 안) 써도 똑같은 의미
+  - key값에 띄어쓰기가 들어간다면 무조건 문자열로 써야 함
+
+### 속성명 축약 
+
+```javascript
+const books = ['Learning JS', 'Learning Python']
+const magazines = ['Vogue', 'Science']
+
+const bookShop_before = {
+  books: books,
+  magazines: magazines,
+}
+// 속성명 축약
+const bookShop_after = {
+  books,
+  magazines,
+}
+```
+
+- 객체를 정의할 때 key와 할당하는 값의 이름이 같으면 줄여쓸 수 있음
+
+### 메서드명 축약 
+
+```javascript
+const books = ['Learning JS', 'Learning Python']
+const magazines = ['Vogue', 'Science']
+
+const bookShop_after = {
+  books,
+  magazines,
+
+  greeting_1: function () {
+    console.log('hola!')
+  }, 
+ // 메서드명 축약
+  greeting_2() {
+    console.log('hola!')
+  },
+}
+
+bookShop_after.greeting_2()
+```
+
+- 메서드 선언시 function 키워드 생략 가능
+
+### 계산된 속성 (computed property name)
+
+- 동적으로 key의 이름을 바꿀 수 있음
+- key값이 따라 바뀜
+- 객체를 선언할 때 key-value를 동적으로 변환 가능
+- `[ ]` 안쪽에 내가 넣고 싶은 변수를 넣어주면 됨
+
+### 구조 분해 할당 (destructing assignment)
+
+```javascript
+const userInformation = {
+  name: 'ssafy kim', 
+  userId: 'ssafyStudent1234',
+  phonenumber: 010-1234-1234,
+  email: 'ssafy@ssafy.com',
+}
+
+userInformation.name = 'uussong'
+
+// 기존 방식
+const name = userInformation.name
+const userId = userInformation.userId
+const phonenumber = userInformation.phonenumber
+const email = userInformation.email
+
+// 구조 분해 할당
+const {name} = userInformation
+const {userId} = userInformation
+const {phonenumber} = userInformation
+const {email} = userInformation
+
+const {name, userId, phonenumber, email} = userInformation
+const {userId, email} = userInformation
+
+```
+
+```javascript
+getUserInfo_bad(userObj) {
+  // 기존 방법
+  const userId = userObj.userId
+  const email = userObj.email
+  // 구조 분해 할당
+  const {userId} = userObj
+  const {email} = userObj
+  // 여러 개 한 번에도 가능
+  const {userId, email} = userObj
+
+  console.log(`User ID: ${userId}`);
+  console.log(`User Email: ${email}`);
+}
+```
+
+```javascript
+// 완전한 방식
+function getUserInfo ({userId, email}) {
+  console.log(`User ID: ${userId}`);
+  console.log(`User Email: ${email}`);
+}
+
+getUserInfo(userInformation)
+```
+
+- 배열 또는 객체를 분해하여 속성을 변수에 쉽게 할당 가능
+
+### Spread Operator (...)
+
+- 객체 내부에서 객체 전개 가능
+- 변수가 아니라 참조라면 리스트가 들어간다면 얕은 복사가 됨
+
+### JSON (JavaScript Object Notation)
+
+- key-value쌍의 형태
+- 자바스크립트 객체와 유사하나 실제로는 문자열 타입이기 때문에 JS 객체로 조작하기 위해선 parsing 필수
+- `JSON.parse()`
+  - JSON을 자바스크립트 객체로 만듦
+  - 장고에서 주고 받던 JSON은 JSON형태이지만 문자열로 주고 받음 이것을 자바스크립트의 Obj로 변환
+  - `"{'name': 'john', 'age': '23'}"` 이를 JS Obj로 변환
+  - `const obj = JSON.parse()`로 받아주면 됨
+- `JSON.stringify()`
+  - 자바스크립트 객체를 JSON형태의 포멧인 문자열로 변환하는 것
+
+## this
+
+```javascript
+function getFullName() {
+  return this.firstName + this.lastName
+}
+
+const me = {
+  firstName: 'John',
+  lastName: 'Doe',
+  getFullName: getFullName, // this === me
+}
+
+const you = {
+  firstName: 'zzulu',
+  lastName: 'lim',
+  getFullName: getFullName, // this === you
+}
+
+me.getFullName()  //JohnDoe
+you.getFullName() //zzululim
+getFullName()     // NaN    // this === window=
+```
+
+- JS의 `this`는 실행 문맥에 따라 다른 대상을 가리킴
+
+- 어떠한 객체 안에 있는 메소드에서 사용하는 `this`는 현재 메소드가 속해있는 객체 자체를 의미
+
+- 객체에서 바로 쓰는 객체는 window를 의미
+
+  - window: 보고 있는 브라우저 자체의 객체
+    - 브라우저 탭
+    - 보고 있는 브라우저에 대한 모든 정보가 담겨있음
+
+  - document (dom 최상위 모델)도 존재
+
+  ```javascript
+  const obj = {
+      name: 'uusong',
+      test: this
+  }
+  
+  obj.name
+  'uusong'
+  obj.test
+  Window {window: Window, self: Window, document: document, name: '', location: Location, …}
+  ```
+
+### function 키워드와 화살표 함수 차이
+
+- .bind(this)까지 한 번에 처리한 것이 화살표 함수
+- forEach는 콜백함수 / obj 메서드 아님 // printArea는 메서드
+  - 메서드가 아니기 때문에 this가 obj로 접근이 안 됨
+  - .bind(this)를 써야 메서드 안에 있는 디스와 콜백함수 this를 바인딩해줌
+    - 콜백함수 안 쪽에서도 this란 키워드에 접근하기 위함
+- 화살표 함수를 사용하면 콜백함수 내에서도 this 접근 가능
+
+
+
+## lodash
+
+- _dash 아래있는 dash로 기능을 하는 라이브러리 [공식문서](https://lodash.com/docs/4.17.15)
+- sortBy, range, random, cloneDeep -> deepcopy
+- `_` 가 lodash 패키지 이름
+  - `_.sample()`형태 랜덤하게 한 개의 엘리먼트를 뽑아줌
+  - `const myRange = _.range(1, 11, 2)`
+  - `const copyArr = _.cloneDeep(myArr)` 참조 타입도 알아서 딥 카피를 해주는 메소드
+
+
+
+
+
+문자열 / 배열 API 배운 것

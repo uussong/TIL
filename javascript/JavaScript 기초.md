@@ -64,7 +64,7 @@
   - 재할당 할 예정이 없는 변수 선언 시 사용
   - 재할당 불가능 
     - `=`(할당기호)가 다시 들어올 수 없음
-  - const 상수란 의미\지만 진짜 상수는 아님
+  - const 상수란 의미지만 진짜 상수는 아님
   - 값을 바꾸는 걸 못 하는 게 아닌 재할당을 못 하는 것
     - mutable한 개체를 바꾸는 것 가능
     - 기존에 가지고 있던 값을 조작하는 것은 가능
@@ -108,13 +108,7 @@
       - 현재는 없지만 뒤에 있으니 끌어 올려서 메모리 상에서 처리
     - `let`, `const`로 선언할 경우 Uncaught ReferenceError 발생
   
-- `console.log()` = `print()`
-
-- shift+enter 여러 줄 입력 가능
-
-- `log`쓰고 tab `console.log`
-
-
+  
 
 ## 데이터 타입
 
@@ -130,6 +124,7 @@
     - call by value
 - 참조 타입
   - 객체(object) 타입의 자료형
+    - 자바스크립트에선 참조타입의 기본이 객체
   - 여러 개의 원시타입이 모인 덩어리 느낌
     - Array, Function 등
     - Function도 하나의 데이터 타입
@@ -892,8 +887,18 @@ bookShop_after.greeting_2()
 
 ### 계산된 속성 (computed property name)
 
+```javascript
+const key = 'regions'
+const value = ['광주', '대전', '구미', '서울']
+
+const ssafy = {
+    [key]: value,
+}
+console.log(ssafy) // { rigions: Array(4) }
+console.log(ssafy.regions) // ['광주', '대전', '구미', '서울']
+```
+
 - 동적으로 key의 이름을 바꿀 수 있음
-- key값이 따라 바뀜
 - 객체를 선언할 때 key-value를 동적으로 변환 가능
 - `[ ]` 안쪽에 내가 넣고 싶은 변수를 넣어주면 됨
 
@@ -901,10 +906,10 @@ bookShop_after.greeting_2()
 
 ```javascript
 const userInformation = {
-  name: 'ssafy kim', 
-  userId: 'ssafyStudent1234',
+  name: 'uussong', 
+  userId: '1234',
   phonenumber: 010-1234-1234,
-  email: 'ssafy@ssafy.com',
+  email: 'uussong@uussong.com',
 }
 
 userInformation.name = 'uussong'
@@ -921,20 +926,21 @@ const {userId} = userInformation
 const {phonenumber} = userInformation
 const {email} = userInformation
 
+// 한 번에 여러 개 가능
 const {name, userId, phonenumber, email} = userInformation
 const {userId, email} = userInformation
 
 ```
 
 ```javascript
-getUserInfo_bad(userObj) {
+function getUserInfo_bad(userObj) {
   // 기존 방법
   const userId = userObj.userId
   const email = userObj.email
   // 구조 분해 할당
   const {userId} = userObj
   const {email} = userObj
-  // 여러 개 한 번에도 가능
+]
   const {userId, email} = userObj
 
   console.log(`User ID: ${userId}`);
@@ -943,7 +949,7 @@ getUserInfo_bad(userObj) {
 ```
 
 ```javascript
-// 완전한 방식
+// 매개 변수에 구조 분해 할당
 function getUserInfo ({userId, email}) {
   console.log(`User ID: ${userId}`);
   console.log(`User Email: ${email}`);
@@ -952,7 +958,9 @@ function getUserInfo ({userId, email}) {
 getUserInfo(userInformation)
 ```
 
+- 객체에 있는 특정 속성의 value값을 어떤 변수에 넣을 때 변수명과 key값이 같다면 구조 분해 할당할 수 있음
 - 배열 또는 객체를 분해하여 속성을 변수에 쉽게 할당 가능
+- 배열에서 쓰는 구조 분해 할당 ex.`[a, b] = [10, 20]`
 
 ### Spread Operator (...)
 
@@ -992,41 +1000,64 @@ const you = {
 
 me.getFullName()  //JohnDoe
 you.getFullName() //zzululim
-getFullName()     // NaN    // this === window=
+getFullName()     // NaN    // this === window
 ```
 
-- JS의 `this`는 실행 문맥에 따라 다른 대상을 가리킴
+- `this`는 실행 문맥에 따라 다른 대상을 가리킴
+- 어떠한 객체 안에 있는 메서드에서 사용하는 `this`는 현재 메서드가 속해있는 객체 자체를 의미
+- `this`는 메서드에서만 의미를 찾자!
 
-- 어떠한 객체 안에 있는 메소드에서 사용하는 `this`는 현재 메소드가 속해있는 객체 자체를 의미
+```javascript
+const obj = {
+    name: 'uusong',
+    test: this
+}
 
-- 객체에서 바로 쓰는 객체는 window를 의미
+obj.name
+'uusong'
+obj.test
+Window {window: Window, self: Window, document: document, name: '', location: Location, …}
+```
 
+- 보통 this는 window를 가리킴 이 땐 this를 사용하지 않고 window를 사용
   - window: 보고 있는 브라우저 자체의 객체
     - 브라우저 탭
     - 보고 있는 브라우저에 대한 모든 정보가 담겨있음
-
-  - document (dom 최상위 모델)도 존재
-
-  ```javascript
-  const obj = {
-      name: 'uusong',
-      test: this
-  }
-  
-  obj.name
-  'uusong'
-  obj.test
-  Window {window: Window, self: Window, document: document, name: '', location: Location, …}
-  ```
+    - document (dom 최상위 모델)도 존재
 
 ### function 키워드와 화살표 함수 차이
 
-- .bind(this)까지 한 번에 처리한 것이 화살표 함수
-- forEach는 콜백함수 / obj 메서드 아님 // printArea는 메서드
-  - 메서드가 아니기 때문에 this가 obj로 접근이 안 됨
-  - .bind(this)를 써야 메서드 안에 있는 디스와 콜백함수 this를 바인딩해줌
-    - 콜백함수 안 쪽에서도 this란 키워드에 접근하기 위함
-- 화살표 함수를 사용하면 콜백함수 내에서도 this 접근 가능
+```javascript
+const obj = {
+    PI: 3.14,
+    radiuses: [1, 2, 3, 4, 5],
+    printArea: function() {
+        this.radiuses.forEach(function (r) {
+            console.log(this.PI * r * r)
+        }.bind(this))
+    },
+}
+```
+
+```javascript
+const obj = {
+    PI: 3.14,
+    radiuses: [1, 2, 3, 4, 5],
+    printArea: function() {
+        this.radiuses.forEach((r) => {
+            console.log(this.PI * r * r)
+        })
+    },
+}
+```
+
+- `printArea`의 함수는 메서드이지만 `forEach`의 콜백함수는 메서드가 아님 
+  - `this.radiuses`는 메서드이므로 접근 가능하나 `this.PI`는 접근 불가능
+    - 내부의 `this`는 `window` 
+- `.bind(this)`를 쓰면 메서드 안에 있는 `this`와 콜백함수의 `this`를 바인딩해줌
+  - 콜백함수 안 쪽에서도 `this`에 접근하기 위함
+- 화살표 함수를 사용하면 콜백함수 내에서도 `this` 접근 가능
+  - `.bind(this)`까지 한 번에 처리한 것이 화살표 함수
 
 
 
@@ -1035,12 +1066,6 @@ getFullName()     // NaN    // this === window=
 - _dash 아래있는 dash로 기능을 하는 라이브러리 [공식문서](https://lodash.com/docs/4.17.15)
 - sortBy, range, random, cloneDeep -> deepcopy
 - `_` 가 lodash 패키지 이름
-  - `_.sample()`형태 랜덤하게 한 개의 엘리먼트를 뽑아줌
+  - `_.sample()`형태 랜덤하게 한 개의 element를 뽑아줌
   - `const myRange = _.range(1, 11, 2)`
-  - `const copyArr = _.cloneDeep(myArr)` 참조 타입도 알아서 딥 카피를 해주는 메소드
-
-
-
-
-
-문자열 / 배열 API 배운 것
+  - `const copyArr = _.cloneDeep(myArr)` 참조 타입도 알아서 deepcopy를 해주는 메소드

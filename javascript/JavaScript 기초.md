@@ -11,15 +11,18 @@
 
 - 웹 브라우저
 - 웹 문서를 받아서 우리 화면에 보여주는 역할
-- URL입력하면 웹 탐색해 서버와 통신하는 걸 자동으로 해줌
-- 서버에서 조작을 하면 결국엔 웹문서를 주게 된다. 그럼 이것을 브라우저가 받는다. 웹문서를 브라우저가 받아서 화면에 보여주게 됨
+- URL입력하면 웹을 탐색해 서버와 통신하는 걸 자동으로 해줌
+- 서버에서 조작을 하면 결국엔 웹문서를 주게 되고 그럼 이것을 브라우저가 받음 
+  - 웹문서를 브라우저가 받아서 화면에 보여주게 됨
+
 
 ## Browser
 
-- DOM(Document Object Model) 조작
+- DOM(Document Object Model)
   - 문서 객체 모델
-  - head와 body로 이루어져있고 등등 각각을 DOM 즉 문서 객체, 각각을 객체로 봐서 소스 코드 자체를 트리 구조로 나타낸 것이 DOM
-- BOM
+  - head와 body로 이루어져있고 등등 각각을 DOM 
+  - 즉 문서 객체, 각각을 객체로 봐서 소스 코드 자체를 트리 구조로 나타낸 것이 DOM
+- BOM(Browser Object Model)
   - 브라우저를 이 구조로 나눈 것
   - 거의 조작하지 않음
 - 트리구조로 나타내면 계층 구조가 명확해져 요소에 바로 접근할 수 있게 됨
@@ -331,7 +334,7 @@ while (i < 6) {
 ### `for`
 
 - for문은 범위를 정해주고 그 안에서만 iteration을 도는 것
-  - 파이썬은 보통 해당 객체 리스트, range를 알아서 돌지만 자바스크립트는 시작과 끝 값 증가를 설정해야함
+  - 파이썬은 보통 해당 객체 리스트, range를 알아서 돌지만 자바스크립트는 시작과 끝 값, 증가를 설정해야함
 
 ```javascript
 const arr = [1, 2, 3]
@@ -375,7 +378,7 @@ for (let capital in capitals) {
 
 - 반복 가능한 객체를 순회하며 value값을 참조하는 옵션
 
-  - 배열 순회
+  - 배열 순회에 적합
 
   ```javascript
   const = fruits = ['딸기', '사과', '수박', '메론']
@@ -414,7 +417,7 @@ function name(params) { // 함수명(파라미터)
   // do~~                  로직
 }
 
-함수명(파라미터)()
+함수명(파라미터)
 ```
 
 - `let a = 1`, `const b = 5` 등으로 `let`, `const`를 사용하듯이 `function`을 앞에 써주는 것
@@ -435,8 +438,8 @@ let 함수명 = function (파라미터) {
 ```
 
 - 정의한 함수를 별도의 변수에 할당하는 것
-- 함수의 이름이 필요가 없기 때문에 보통 2번의 형태로 사용
-- 자바스크립트에선 익명함수를 쓰는 데, 함수의 인자를 쓰는데 제약이 없음 코드 열 줄을 쓰기도 함
+- 함수의 이름이 필요가 없기 때문에 보통 이름을 생략한 2번의 형태, 즉 익명 함수로 정의해 사용
+- 자바스크립트에선 익명함수를 쓰는 데, 함수의 인자를 쓰는데 제약이 없어 코드 열 줄을 쓰기도 함
   - 익명함수는 한 번 선언하고 나서 부르지 않겠다는 것
 
 ### 기본인자 
@@ -455,34 +458,34 @@ sayHi('uusong') // uussong 하이하이
 
 ### 매개변수와 인자의 개수 불일치허용
 
-- 매개변수보다 인자의 개수가 많을 경우
+#### 매개변수보다 인자의 개수가 많을 경우
 
-  ```javascript
-  const noArgs = function () {
-      return 0
-  }
-  noArgs(1, 2, 3) // 0
-  
-  const twoArgs = function (arg1, arg2) {
-      return [arg1, arg2]
-  }
-  twoArgs(1, 2, 3) // [1, 2]
-  ```
+```javascript
+const noArgs = function () {
+    return 0
+}
+noArgs(1, 2, 3) // 0
 
-  - 매개변수 개수만큼만 값을 넘겨줌
+const twoArgs = function (arg1, arg2) {
+    return [arg1, arg2]
+}
+twoArgs(1, 2, 3) // [1, 2]
+```
 
-- 매개변수보다 인자의 개수가 적을 경우
+- 매개변수 개수만큼만 값을 넘겨줌
 
-  ```javascript
-  const threeArgs = function (arg1, arg2, arg3) {
-      return [arg1, arg2, arg3]
-  }
-  threeArgs()	// [undefined, undefined, undefined]
-  threeArgs(1) // [1, undefined, undefined]
-  threeArgs(1, 2) // [1, 2, undefined]
-  ```
+#### 매개변수보다 인자의 개수가 적을 경우
 
-  - 부족한 만큼 `undefined` 반환
+```javascript
+const threeArgs = function (arg1, arg2, arg3) {
+    return [arg1, arg2, arg3]
+}
+threeArgs()	// [undefined, undefined, undefined]
+threeArgs(1) // [1, undefined, undefined]
+threeArgs(1, 2) // [1, 2, undefined]
+```
+
+- 부족한 만큼 `undefined` 반환
 
 ### Rest Parameter
 
@@ -557,7 +560,7 @@ const myFunc = function(arg1, arg2, arg3, ar4) {
 
 - 함수 표현식으로 선언한 함수에선 호이스팅이 일어나지 않고 에러 발생
 
-  - 함수를 표현식으로 쓰는 순간 더 이상 함수라기 보다는 변수의 스코프 규칙을 따르게 되기 때문 
+  - 함수를 표현식으로 쓰는 순간 더 이상 함수라기 보다는 변수로 평가되어 변수의 스코프 규칙을 따르게 되기 때문 
 
     - const 스코프에 종속
 
@@ -583,7 +586,7 @@ const myFunc = function(arg1, arg2, arg3, ar4) {
 
   - testFunc이 있긴 하다는 걸 적어두었으나 단순히 이름만 적어둔 것, 변수 선언만 호이스팅 됨
 
-  - 실행시점에선 내부적으로 `undefined` 타입, `undefined()`를 수행하는거나 마찬가지
+  - 실행시점에선 내부적으로 `undefined` 타입, `undefined()`를 수행하는거나 마찬가지인 셈
 
     
 
@@ -598,19 +601,22 @@ const arrow1 = function (name) {
   return `${name}님 안녕하세요?`
 }
 
+// function 키워드 삭제 가능
 const arrow2 = (name) => {
   return `${name}님 안녕하세요?`
 }
 
+// 매개변수 1개일 경우 () 생략 가능
 const arrow3 = name => {
   return `${name}님 안녕하세요?`
 }
 
+// 함수 바디가 return 포함한 표현식이 1개일 경우 {}와 return 삭제 가능
 const arrow4 = name => `${name}님 안녕하세요?`
 ```
 
-- `=>` 형태로 쓰면 function이라는 키워드를 생략할 수 있음
-- 매개변수가 한 개이면 소괄호마저 생략할 수 있음
+- `=>` 형태로 함수를 쓰면 function이라는 키워드를 생략할 수 있음
+- 매개변수가 한 개이면 `( )`마저 생략할 수 있음
 - return, 로직이 한 줄이라면 `return`, `{ }` 생략할 수 있음
 
 - Lexical Scope 함수를 어디에서 호출했는지가 중요한 게 아니라 어디에서 선언(=정의)했는지가 중요
@@ -624,12 +630,15 @@ const arrow4 = name => `${name}님 안녕하세요?`
 
 ## 배열 (Arrays)
 
+- 참조 타입의 객체
+  - `key`가 index가 됨
+
 - 순서가 있는 자료형
 - 앞에서부터 인덱스가 부여되어 있음
-- 음수 인덱스 활용 불가 `undefined`
+  - 음수 인덱스 활용 불가 `undefined`
+
 - 마지막 원소를 알기 위해선 `arr.length` 로 길이를 알아내 접근
   - `arr[arr.length-1]`
-
 - [배열 관련 메서드 정보](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Array#%EC%9D%B8%EC%8A%A4%ED%84%B4%EC%8A%A4_%EB%A9%94%EC%84%9C%EB%93%9C)
 
 ### 배열을 순회하며 특정 로직을 수행하는 메서드
@@ -638,7 +647,7 @@ const arrow4 = name => `${name}님 안녕하세요?`
   - 배열을 순회하며 특정메서드를 수행하는데 이 때 콜백함수를 실행하려 하는 것
 - 콜백함수란 그냥 함수인데 메서드 호출할 때 인자로 넘겨받는 함수
   - 메서드에 인자값으로 전달되는 함수
-  - `myFunc(myFunc2)` 마이펑션 내부에서 마이펑션2 실행
+  - `myFunc(myFunc2)` myFunc 내부에서 myFunc2 실행
 
 #### forEach
 
@@ -691,13 +700,13 @@ const heights = images.map((elem) => {
   return elem.height
 })
 
-console.log(heights)
+console.log(heights) //  ['34px', '54px', '83px']
 ```
 
 - 콜백 함수의 반환 값을 요소로 하는 새로운 배열을 반환
   - 기존 배열 전체를 다른 배열로 바꿀 때 유용
   - 리턴 값을 각각 받아서 새로운 배열을 return
-- 배열을 순회하며 콜백함수 실행  한개 씩 한개씩 실행한 결과를 새로운 배열에 담아주는 것
+- 배열을 순회하며 콜백함수 실행 한 개씩 한 개씩 실행한 결과를 새로운 배열에 담아주는 것
 - 원본 배열을 건들지 않음
 
 #### filter
@@ -741,12 +750,13 @@ console.log(rlt) // 30
 ```
 
 - acc accumulate 누적값을 모아줌
-- 최초의 arr 요소 하나씩 반복하며 콜백함수를 실행하며 return값을 하나하나 accumulate함(acc에 누적) 
-  - acc 값을 반환
+- 최초의 arr 요소 하나씩 반복하며 콜백함수를 실행하며 return값을 하나하나 accumulate한(acc에 누적) 후 acc 값을 반환
 - `myArr.reduce((acc, elem, idx, arr) => {}, init )`
-- acc가 최초의 어떤 값일지를 저장해줘야 함 맨 마지막에 두번째 인자(`init`)로 들어감
+- acc가 최초의 어떤 값일지를 저장해줘야 함 
+  - 맨 마지막에 두번째 인자(`init`)로 들어감
+
 - `reduce`메소드에는 콜백함수 / 초기값(init) 두 개의 값이 들어가게 됨
-- 콜백함수 시행 독립시행 서로에게 영향 안 미치나 acc로 인해 기억하게됨 
+- 콜백함수 시행은 독립시행으로 서로에게 영향 안 미치나 acc로 인해 기억하게됨 
 - acc를 이용해 누적시키거나 빼거나 할 수 있게 됨
 
 #### find
@@ -836,10 +846,11 @@ const me = {
   - `.`을 보통 사용하나 띄어쓰기가 되어있다면 `[ ]`로만 접근 가능
 - 메서드는 객체 안에 들어가 있는 함수, JSON안에 들어가 있는 함수 형태
   - value에 함수를 넣은 것
+  - `객체.메서드명()`으로 호출
 - 메서드 내부에서 `this` 키워드는 객체를 의미
   - `fullname`은 메서드가 아니기 때문에 `NaN`이 출력
   - `getFullName`은 메서드이기 때문에 객체의 `firstName`과 `lastName`을 반환
-- key값이 문자열이어야 하는데 따옴표 없이 (문자열로 안) 써도 똑같은 의미
+- key값은 문자열이어야 하는데 따옴표 없이 (문자열로 안) 써도 똑같은 의미
   - key값에 띄어쓰기가 들어간다면 무조건 문자열로 써야 함
 
 ### 속성명 축약 
@@ -1019,11 +1030,11 @@ obj.test
 Window {window: Window, self: Window, document: document, name: '', location: Location, …}
 ```
 
-- 보통 this는 window를 가리킴 이 땐 this를 사용하지 않고 window를 사용
+- 보통 `this`는 `window`를 가리킴 이 땐 `this`를 사용하는 대신 `window`를 사용
   - window: 보고 있는 브라우저 자체의 객체
     - 브라우저 탭
     - 보고 있는 브라우저에 대한 모든 정보가 담겨있음
-    - document (dom 최상위 모델)도 존재
+    - `document`(DOM 최상위 모델)도 이 안에 존재
 
 ### function 키워드와 화살표 함수 차이
 

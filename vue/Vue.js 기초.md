@@ -138,3 +138,36 @@
   - Model의 데이터가 변경되면 가상DOM과 실제 사용자 DOM을 비교해 달라진 걸 발견하면 변경사항을 DOM 구조에 반영, 알아서 갱신해줌
     - reactivity 데이터 바뀌자마자 바로바로 화면을 알아서 그려줌
   - View와 Model 사이에서 data와 DOM에 관련된 모든 일 처리
+
+
+
+## Basic syntax of Vue.js
+
+```vue
+ <div id="app">
+    <button v-on:click="myFunc">a</button>
+    <button @click="yourFunc">b</button>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script>
+    const vm = new Vue({
+      el: "#app",
+      data: {
+        a: 1,
+      },
+      methods: {
+        myFunc: function () {
+          console.log(this) // Vue instance
+        },
+       // 이 형태도 가능
+       // myFunc() {
+       //   console.log(this)
+       // },
+        yourFunc: () => {
+          console.log(this); // window
+        }
+      }
+    })
+```
+

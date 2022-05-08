@@ -246,3 +246,34 @@ def profile(request, username):
 
 - User가 참조하는 AbstractUser에 username이라는 필드가 있음
 - username은 유일한 값이므로 기존의 pk역할을 대체할 수 있음
+
+
+
+## Follow
+
+- user와 user간 self
+
+```python
+class User(AbstractUser):
+    followings = models.ManyToManyField('self', symmetrical=False, related_name='followers')
+```
+
+- 중개 테이블 필드 생성 규칙에 따라 자기 자신을 참조 할 때는 필드 이름에 from/to가 붙게 됨
+  - `from_<model>_id` / `to_<model>_id`
+
+```python
+@require_POST
+def follow(request, user_pk):
+    if reqeust.user.is_authenticated:
+        person = get_object_or_404(get_user_model(), pk=user_pk)
+        if person != request.user:
+            if person.followers.filter(pk=request.user.pk).exists():
+                person.followers.remove(request.user)
+            else:
+                person.follwers.add(request.user)
+        return redirect('accounts:profile', person.username)
+	return redirect('accounts:login')
+```
+
+- `if person != request.user:`
+  - 자기 자신을 팔로우 하는 걸 막아야 함

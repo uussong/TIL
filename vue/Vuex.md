@@ -109,3 +109,5 @@
 - state를 기반으로 추출해내는 값 getters
   - data를 기반으로 추출해내는 값 computed와 유사
 - getters 자체는 state를 변경하지 않음 단지 추출해낸 값, 계산된 값을 가져오는 것
+
+

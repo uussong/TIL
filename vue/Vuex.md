@@ -40,7 +40,7 @@
   - state = data
   - view = HTML 화면
   - action = methods
-  - data 바뀌면 화면이 바뀜 화면에서 input 등 인터랙션이 일어남(행동, 함수) 이에 따라 state가 바뀌는데 action을 통해 state가 바뀌게 됨
+  - data 바뀌면 화면이 바뀌고 화면에서 input 등 인터랙션이 일어남(행동, 함수)에 따라 state가 바뀌는데 이 때 action을 통해 state가 바뀌게 됨
 
 ### Vuex management pattern
 
@@ -70,11 +70,7 @@
 
 ​	![image-20220511130022478](Vuex.assets/image-20220511130022478.png)
 
-- 컴포넌트에서 상호작용이 일어나면 어떤 행동을 하게 됨
-- action 함수, 모든 행동 
-- mutation 함수 중 data의 변경을 일으키는 것
--  render 렌더링 화면이 바뀜 commit 저지르다 dispatch 호출하다 mutate 변경
-- vuex가 담당하는 건 행동 - 변화 - 데이터 
+- Vuex가 담당하는 건 행동 - 변화 - 데이터 
   - 변화는 데이터의 변화
 
 #### State
@@ -113,5 +109,3 @@
 - state를 기반으로 추출해내는 값 getters
   - data를 기반으로 추출해내는 값 computed와 유사
 - getters 자체는 state를 변경하지 않음 단지 추출해낸 값, 계산된 값을 가져오는 것
-
-
